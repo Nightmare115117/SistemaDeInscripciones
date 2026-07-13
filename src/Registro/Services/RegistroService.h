@@ -3,8 +3,9 @@
 #include "Registro/Models/RegistroModel.h"
 #include "Registro/Repositories/RegistroRepository.h"
 
-class RegistroService : public Service <RegistroModel> {
+class RegistroService : public Service <RegistroModel, RegistroRepository> {
 
+public:
     std::vector<RegistroModel> findAll() const;
     RegistroModel findById(int id) const;
     int insert (const RegistroModel& entity);
