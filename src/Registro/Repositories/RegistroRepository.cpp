@@ -11,14 +11,14 @@ RegistroRepository::RegistroRepository(DBConfig& dbConfig) : dbConfig(dbConfig) 
 vector<RegistroModel> RegistroRepository::findAll() const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idRegistro, Fecha_hora_registro ,idEquipo FROM Registro");
+    result r = txn.exec("SELECT idregistro, fecha_hora_registro, idequipo FROM registro");
 
     vector<RegistroModel> lista;
 
     for (auto fila : r) {
-        RegistroModel registro(fila ["idEquipo"].as<int>());
-        registro.setId(fila ["idRegistro"].as<int>());
-        registro.setFecha(fila ["Fecha_hora_registro"].as<string>());
+        RegistroModel registro(fila["idequipo"].as<int>());
+        registro.setId(fila["idregistro"].as<int>());
+        registro.setFecha(fila["fecha_hora_registro"].as<string>());
         lista.push_back(registro);
     }
 
@@ -28,17 +28,17 @@ vector<RegistroModel> RegistroRepository::findAll() const {
 RegistroModel RegistroRepository::findById(int id) const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idRegistro, Fecha_hora_registro, idEquipo FROM Registro WHERE idRegistro = $1", params{id});
+    result r = txn.exec("SELECT idregistro, fecha_hora_registro, idequipo FROM registro WHERE idregistro = $1", params{id});
 
-    if (r.empty()){
+    if (r.empty()) {
         RegistroModel registro;
         registro.setId(-1);
         return registro;
     }
 
-    RegistroModel registro(r[0]["idEquipo"].as<int>());
-    registro.setId(r[0]["idRegistro"].as<int>());
-    registro.setFecha(r[0]["Fecha_hora_registro"].as<string>());
+    RegistroModel registro(r[0]["idequipo"].as<int>());
+    registro.setId(r[0]["idregistro"].as<int>());
+    registro.setFecha(r[0]["fecha_hora_registro"].as<string>());
 
     return registro;
 }
@@ -46,12 +46,12 @@ RegistroModel RegistroRepository::findById(int id) const {
 int RegistroRepository::insert(const RegistroModel& entity) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec("INSERT INTO Registro (idEquipo) VALUES ($1) RETURNING idRegistro", params{
-        entity.getIdEquipo() //parametro 1
+    result r = txn.exec("INSERT INTO registro (idequipo) VALUES ($1) RETURNING idregistro", params{
+        entity.getIdEquipo() // parametro 1
     });
 
     txn.commit();
-    return (r[0]["idRegistro"].as<int>());
+    return (r[0]["idregistro"].as<int>());
 }
 
 bool RegistroRepository::update(const RegistroModel& entity) {
@@ -61,9 +61,9 @@ bool RegistroRepository::update(const RegistroModel& entity) {
 bool RegistroRepository::remove(int id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec("DELETE FROM Registro WHERE idREgistro = $1", 
+    result r = txn.exec("DELETE FROM registro WHERE idregistro = $1",
         params{
-            id //parametro 1
+            id // parametro 1
         });
     txn.commit();
 
