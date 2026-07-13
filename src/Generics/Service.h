@@ -1,8 +1,12 @@
 #pragma once
 #include <vector>
 
-template <typename T>
+template <typename T, typename Repository>
 class Service {
+
+protected:
+
+    Repository repo;
 
 public:
 
