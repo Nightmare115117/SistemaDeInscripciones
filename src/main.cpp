@@ -4,6 +4,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "Registro/Repositories/RegistroRepository.h"
+#include "Registro/Services/RegistroService.h"
+#include "Registro/Controllers/RegistroController.h"
+
 using namespace std;
 using namespace crow;
 using namespace pqxx;
@@ -21,6 +25,12 @@ int main() {
     SimpleApp app;
     DBConfig config;
     string databaseUrl = config.obtenerDatabaseUrl();
+
+    RegistroRepository registroRepo(config);
+    RegistroService registroService(registroRepo);
+    RegistroController RegistroController(registroService);
+
+    RegistroController.registrarRutas(app, "/api/registros");
 
     // Ruta de prueba de conexión
     CROW_ROUTE(app, "/api/test-db")

@@ -6,10 +6,10 @@ class Service {
 
 protected:
 
-    Repository repo;
+    Repository& repo;
 
 public:
-
+    explicit Service(Repository& repo) : repo(repo) {}
     virtual ~Service() = default;
 
     virtual std::vector<T> findAll() const = 0;
@@ -19,5 +19,4 @@ public:
     virtual bool remove(int id) = 0;
 
     virtual bool validate(const T& entidad) = 0;
-    virtual bool exist(int id) = 0;
 };
