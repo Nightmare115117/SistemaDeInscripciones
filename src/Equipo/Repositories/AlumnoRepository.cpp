@@ -83,3 +83,30 @@ AlumnoModel AlumnoRepository::findById(int id) const{
 
     return alumno;
 }
+
+int AlumnoRepository::insert(const AlumnoModel& entity) {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    work txn(conn);
+    result r = txn.exec("INSERT INTO registro (idequipo) VALUES ($1) RETURNING idregistro", params{
+        entity.getIdEquipo() // parametro 1
+    });
+
+    txn.commit();
+    return (r[0]["idregistro"].as<int>());
+}
+
+bool AlumnoRepository::update(const AlumnoModel& entity) {
+    throw logic_error("No se permite actualizar un registro una vez creado");
+}
+
+bool AlumnoRepository::remove(int id) {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    work txn(conn);
+    result r = txn.exec("DELETE FROM registro WHERE idregistro = $1",
+        params{
+            id // parametro 1
+        });
+    txn.commit();
+
+    return r.affected_rows() > 0;
+}
