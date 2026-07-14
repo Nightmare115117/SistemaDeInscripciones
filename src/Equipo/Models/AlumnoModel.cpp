@@ -61,7 +61,7 @@ const string& AlumnoModel::getApellidoMaterno() const {
     return apellidoMaterno;
 }
 
-const string& AlumnoModel::getAlergia() const {
+const string& AlumnoModel::getAlergias() const {
     return alergias;
 }
 

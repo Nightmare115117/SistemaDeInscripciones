@@ -35,7 +35,7 @@ public:
     const std::string& getNumeroTel() const;
     const std::string& getApellidoPaterno() const;
     const std::string& getApellidoMaterno() const;
-    const std::string& getAlergia() const;
+    const std::string& getAlergias() const;
     const std::string& getCondicionMedica() const;
     const std::string& getMedicamento() const;
     int getIdContacto() const;

@@ -29,7 +29,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
 
     for(auto fila : r) {
         AlumnoModel alumno(fila["nombre"].as<string>());
-        alumno.setId(r[0]["idalumno"].as<int>());
+        alumno.setId(fila["idalumno"].as<int>());
         alumno.setIdEquipo(fila["idequipo"].as<int>());
         alumno.setFirmoTerminos(fila["firmoterminos"].as<bool>());
         alumno.setCorreo(fila["correo"].as<string>());
@@ -87,22 +87,76 @@ AlumnoModel AlumnoRepository::findById(int id) const{
 int AlumnoRepository::insert(const AlumnoModel& entity) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec("INSERT INTO registro (idequipo) VALUES ($1) RETURNING idregistro", params{
-        entity.getIdEquipo() // parametro 1
+    result r = txn.exec(R"sql(INSERT INTO alumnos 
+        (nombre, 
+        idequipo, 
+        firmoterminos, 
+        correo, 
+        numerotel, 
+        apellidopaterno, 
+        apellidomaterno, 
+        alergias, 
+        condicion, 
+        medicamento, 
+        idcontacto) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+        RETURNING idalumno)sql", params{
+        entity.getNombre(), // parametro 1
+        entity.getIdEquipo(), // parametro 2
+        entity.firmoterminos(), // parametro 3
+        entity.getCorreo(), // parametro 4
+        entity.getNumeroTel(), // parametro 5
+        entity.getApellidoPaterno(), // parametro 6
+        entity.getApellidoMaterno(), // parametro 7
+        entity.getAlergias(), // parametro 8
+        entity.getCondicionMedica(), // parametro 9
+        entity.getMedicamento(), // parametro 10
+        entity.getIdContacto() // parametro 11
     });
 
     txn.commit();
-    return (r[0]["idregistro"].as<int>());
+    return r[0]["idalumno"].as<int>();
 }
 
 bool AlumnoRepository::update(const AlumnoModel& entity) {
-    throw logic_error("No se permite actualizar un registro una vez creado");
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    work txn(conn);
+
+    result r = txn.exec(R"sql(UPDATE alumnos SET
+        nombre = CASE WHEN $1 <> '' THEN $1 ELSE nombre END,
+        idequipo = CASE WHEN $2 <> -1 THEN $2 ELSE idequipo END,
+        firmoterminos = $3,
+        correo = CASE WHEN $4 <> '' THEN $4 ELSE correo END,
+        numerotel = CASE WHEN $5 <> '' THEN $5 ELSE numerotel END,
+        apellidopaterno = CASE WHEN $6 <> '' THEN $6 ELSE apellidopaterno END,
+        apellidomaterno = CASE WHEN $7 <> '' THEN $7 ELSE apellidomaterno END,
+        alergias = CASE WHEN $8 <> '' THEN $8 ELSE alergias END,
+        condicion = CASE WHEN $9 <> '' THEN $9 ELSE condicion END,
+        medicamento = CASE WHEN $10 <> '' THEN $10 ELSE medicamento END,
+        idcontacto = CASE WHEN $11 <> -1 THEN $11 ELSE idcontacto END
+    WHERE idalumno = $12)sql", params{
+        entity.getNombre(),
+        entity.getIdEquipo(),
+        entity.firmoterminos(),
+        entity.getCorreo(),
+        entity.getNumeroTel(),
+        entity.getApellidoPaterno(),
+        entity.getApellidoMaterno(),
+        entity.getAlergias(),
+        entity.getCondicionMedica(),
+        entity.getMedicamento(),
+        entity.getIdContacto(),
+        entity.getId()
+    });
+
+    txn.commit();
+    return r.affected_rows() > 0;
 }
 
 bool AlumnoRepository::remove(int id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec("DELETE FROM registro WHERE idregistro = $1",
+    result r = txn.exec("DELETE FROM alumnos WHERE idalumno = $1",
         params{
             id // parametro 1
         });
