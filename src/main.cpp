@@ -13,7 +13,7 @@
 #include "Universidad/Repositories/UniversityRepository.h"
 #include "Universidad/Services/UniversityService.h"
 #include "Universidad/Controllers/UniversidadController.h"
-#include "Problematica/Repositoryie/ProblemaRepository.h"
+#include "Problematica/Repositories/ProblemaRepository.h"
 #include "Problematica/Service/ProblemaService.h"
 #include "Problematica/Controller/ProblemaController.h"
 #include "Equipo/Repositories/ContactoEmergenciaRepository.h"
