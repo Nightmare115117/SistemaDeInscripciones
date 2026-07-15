@@ -1,6 +1,7 @@
 #include "RegistroRepository.h"
 #include <pqxx/pqxx>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 using namespace pqxx;
@@ -68,4 +69,16 @@ bool RegistroRepository::remove(int id) {
     txn.commit();
 
     return r.affected_rows() > 0;
+}
+
+int RegistroRepository::countById() const {
+    try {
+        connection conn(dbConfig.obtenerDatabaseUrl());
+        nontransaction txn(conn);
+        result r = txn.exec("SELECT COUNT(idregistro) FROM registro");
+        return r[0][0].as<int>();
+    } catch (const exception& e) {
+        cerr << "Error al contar registros: " << e.what() << endl;
+    throw;
+    }
 }

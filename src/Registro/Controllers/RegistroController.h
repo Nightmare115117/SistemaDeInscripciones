@@ -10,4 +10,5 @@ public:
 
     crow::json::wvalue toJson(const RegistroModel& entidad) const override;
     RegistroModel fromJson(const crow::json::rvalue& json) const override;
+    void contadorDeRegistros(crow::SimpleApp& app, const RegistroService& service);
 };

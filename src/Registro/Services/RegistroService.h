@@ -14,6 +14,7 @@ public:
     int insert (const RegistroModel& entity);
     bool update(const RegistroModel& entity);
     bool remove(int id);
+    int countById() const;
 
     bool validate(const RegistroModel& entity);
 };
