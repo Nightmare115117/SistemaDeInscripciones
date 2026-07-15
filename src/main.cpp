@@ -59,6 +59,7 @@ int main() {
     ContactoEmergenciaController contactoController(contactoService);
 
     registroController.registrarRutas(app, "/api/registros");
+    registroController.contadorDeRegistros(app, registroService);
     equipoController.registrarRutas(app, "/api/equipos");
     universidadController.registrarRutas(app, "/api/universidades");
     problemaController.registrarRutas(app, "/api/problematica");

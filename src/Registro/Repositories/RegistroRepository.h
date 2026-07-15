@@ -16,4 +16,6 @@ public:
     int insert (const RegistroModel& entity) override;
     bool update (const RegistroModel& entity) override;
     bool remove (int id) override;
+
+    int countById() const;
 };

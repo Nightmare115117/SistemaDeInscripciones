@@ -39,3 +39,7 @@ bool RegistroService::remove(int id) {
 
     return repo.remove(id);
 }
+
+int RegistroService::countById() const {
+    return repo.countById();
+}
