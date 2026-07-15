@@ -1,7 +1,7 @@
 #pragma once
 #include "Generics/Service.h"
 #include "Problematica/Model/ProblemaModel.h"
-#include "Problematica/Repositoryie/ProblemaRepository.h"
+#include "Problematica/Repositories/ProblemaRepository.h"
 
 class ProblemaService : public Service<ProblemaModel, ProblemaRepository> {
 
