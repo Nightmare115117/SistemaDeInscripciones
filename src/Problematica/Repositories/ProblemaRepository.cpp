@@ -11,7 +11,7 @@ ProblemaRepository::ProblemaRepository(DBConfig& dbConfig)
 vector<ProblemaModel> ProblemaRepository::findAll() const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idproblema, nombre, descripcion FROM problematica");
+    result r = txn.exec("SELECT idproblematica, nombre, descripcion FROM problematica");
 
     vector<ProblemaModel> lista;
     for (auto fila : r) {
@@ -26,7 +26,7 @@ vector<ProblemaModel> ProblemaRepository::findAll() const {
 ProblemaModel ProblemaRepository::findById(int id) const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idproblema, nombre, descripcion FROM problematica WHERE idproblema = $1", params{id});
+    result r = txn.exec("SELECT idproblematica, nombre, descripcion FROM problematica WHERE idproblematica = $1", params{id});
 
     if (r.empty()) {
         throw logic_error("No existe una problematica con el id mencionado");
@@ -48,7 +48,7 @@ int ProblemaRepository::insert(const ProblemaModel& entity) {
     });
 
     txn.commit();
-    return r[0]["idproblema"].as<int>();
+    return r[0]["idproblematica"].as<int>();
 }
 
 bool ProblemaRepository::update(const ProblemaModel& entity) {
@@ -70,7 +70,7 @@ bool ProblemaRepository::update(const ProblemaModel& entity) {
 bool ProblemaRepository::remove(int id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec("DELETE FROM problematica WHERE idproblema = $1", params{id});
+    result r = txn.exec("DELETE FROM problematica WHERE idproblematica = $1", params{id});
     txn.commit();
     return r.affected_rows() > 0;
 }
