@@ -1,4 +1,5 @@
 #include "crow.h"
+#include "crow/middlewares/cors.h"
 #include "DBConfig/DBConfig.h"
 #include <pqxx/pqxx>
 #include <cstdlib>
@@ -34,7 +35,15 @@ using namespace pqxx;
 */
 
 int main() {
-    SimpleApp app;
+    App <CORSHandler> app;
+
+    auto& cors = app.get_middleware<CORSHandler>();
+    cors
+        .global()
+        .headers("Content-Type", "Authorization")
+        .methods("GET"_method, "POST"_method, "PUT"_method, "DELETE"_method)
+        .origin("*");
+
     DBConfig config;
     string databaseUrl = config.obtenerDatabaseUrl();
 
