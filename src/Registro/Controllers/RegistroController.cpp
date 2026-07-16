@@ -23,19 +23,3 @@ RegistroModel RegistroController::fromJson(const crow::json::rvalue& json) const
     }
     return RegistroModel(json["idEquipo"].i());
 }
-
-void RegistroController::contadorDeRegistros(SimpleApp& app, const RegistroService& service) {
-
-    CROW_ROUTE(app, "/api/registro/count")([&service]() {
-        try {
-            json::wvalue res;
-            res["total"] = service.countById();
-            return response(200, res);
-        } catch(const exception& e) {
-            json::wvalue res;
-            res["Error"] = e.what();
-            return response(500, res);
-        }
-    });
-
-}

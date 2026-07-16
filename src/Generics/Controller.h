@@ -16,7 +16,8 @@ public:
     virtual crow::json::wvalue toJson(const T& entidad) const = 0;
     virtual T fromJson(const crow::json::rvalue& json) const = 0;
 
-    void registrarRutas(crow::SimpleApp& app, const std::string& basePath) {
+    template <typename AppType>
+    void registrarRutas(AppType& app, const std::string& basePath) {
 
         // GET /basePath  -> listar todos
         app.route_dynamic(basePath)
