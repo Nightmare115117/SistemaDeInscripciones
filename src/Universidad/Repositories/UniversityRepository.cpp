@@ -14,7 +14,7 @@ vector<UniversityModel> UniversityRepository::findAll() const {
     result r = txn.exec("SELECT iduniversidad, nombre_uni FROM universidades");
 
     vector<UniversityModel> lista;
-    for (auto fila : r) {
+    for (const auto &fila : r) {
         UniversityModel universidad(fila["nombre_uni"].as<string>());
         universidad.setId(fila["iduniversidad"].as<int>());
         lista.push_back(universidad);

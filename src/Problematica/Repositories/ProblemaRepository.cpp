@@ -14,7 +14,7 @@ vector<ProblemaModel> ProblemaRepository::findAll() const {
     result r = txn.exec("SELECT idproblematica, nombre, descripcion FROM problematica");
 
     vector<ProblemaModel> lista;
-    for (auto fila : r) {
+    for (const auto &fila : r) {
         ProblemaModel problema(fila["nombre"].as<string>(), fila["descripcion"].as<string>());
         problema.setId(fila["idproblema"].as<int>());
         lista.push_back(problema);

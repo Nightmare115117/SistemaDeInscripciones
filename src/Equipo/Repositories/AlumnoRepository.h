@@ -7,6 +7,11 @@ class AlumnoRepository : public Repository <AlumnoModel> {
 
 DBConfig& dbConfig;
 
+struct EquipoCantidadDTO {
+    int Cantidad;
+    std::string nombre_equipo;
+};
+
 public:
 
     explicit AlumnoRepository(DBConfig& dbConfig);
@@ -16,5 +21,8 @@ public:
     int insert (const AlumnoModel& entity) override;
     bool update (const AlumnoModel& entity) override;
     bool remove (int id) override;
+
+    EquipoCantidadDTO countByIdOrderByGroup(int id) const;
+    std::vector<EquipoCantidadDTO> countByIdOrderByGroupAsList() const;
 
 };
