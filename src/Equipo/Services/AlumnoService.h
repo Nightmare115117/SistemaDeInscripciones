@@ -16,4 +16,7 @@ public:
     bool remove(int id) override;
 
     bool validate(const AlumnoModel& entity) override;
+    
+    AlumnoRepository::EquipoCantidadDTO countByIdOrderByGroup(int id) const;
+    std::vector<AlumnoRepository::EquipoCantidadDTO> countByIdOrderByGroupAsList() const;
 };
