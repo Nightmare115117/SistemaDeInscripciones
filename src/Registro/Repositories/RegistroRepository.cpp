@@ -16,7 +16,7 @@ vector<RegistroModel> RegistroRepository::findAll() const {
 
     vector<RegistroModel> lista;
 
-    for (auto fila : r) {
+    for (const auto &fila : r) {
         RegistroModel registro(fila["idequipo"].as<int>());
         registro.setId(fila["idregistro"].as<int>());
         registro.setFecha(fila["fecha_hora_registro"].as<string>());

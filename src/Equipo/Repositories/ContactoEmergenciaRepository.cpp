@@ -14,7 +14,7 @@ vector<ContactoEmergenciaModel> ContactoEmergenciaRepository::findAll() const {
     result r = txn.exec("SELECT idcontacto, nombre, telefono, pariente FROM contactoemergencia");
 
     vector<ContactoEmergenciaModel> lista;
-    for (auto fila : r) {
+    for (const auto &fila : r) {
         ContactoEmergenciaModel contacto(
             fila["nombre"].as<string>(),
             fila["telefono"].as<string>(),

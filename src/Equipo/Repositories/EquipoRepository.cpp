@@ -13,7 +13,7 @@ vector<EquipoModel> EquipoRepository::findAll() const {
     result r = txn.exec("SELECT idequipo, nombre_equipo, iduniversidad, idlider, idproblematica FROM equipo");
 
     vector<EquipoModel> lista;
-    for (auto fila : r) {
+    for (const auto &fila : r) {
         EquipoModel equipo(
             fila["nombre_equipo"].as<string>(),
             fila["iduniversidad"].as<int>(),

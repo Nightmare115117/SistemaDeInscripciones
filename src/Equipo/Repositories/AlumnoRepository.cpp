@@ -27,7 +27,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
 
     vector<AlumnoModel> lista;
 
-    for(auto fila : r) {
+    for (const auto &fila : r) {
         AlumnoModel alumno(fila["nombre"].as<string>());
         alumno.setId(fila["idalumno"].as<int>());
         alumno.setIdEquipo(fila["idequipo"].as<int>());
@@ -163,4 +163,48 @@ bool AlumnoRepository::remove(int id) {
     txn.commit();
 
     return r.affected_rows() > 0;
+}
+
+AlumnoRepository::EquipoCantidadDTO AlumnoRepository::countByIdOrderByGroup(int id) const{
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec(R"sql(SELECT E.nombre_equipo AS NombreEquipo, COUNT(A.idalumno) AS NOAlumnos FROM alumnos A, equipo E 
+        WHERE A.idequipo = E.idequipo AND
+        A.idequipo = $1
+        GROUP BY E.nombre_equipo
+        ORDER BY E.nombre_equipo)sql", params(
+            id //parametro 1
+        ));
+
+    if (r.empty()) {
+        throw runtime_error("Error, id de equipo no encontrado o inexistente");
+    }
+
+    AlumnoRepository::EquipoCantidadDTO temp;
+    temp.nombre_equipo = (r[0]["NombreEquipo"].as<string>());
+    temp.Cantidad = (r[0]["NOAlumnos"].as<int>());
+
+    
+    return temp;
+}
+
+vector<AlumnoRepository::EquipoCantidadDTO> AlumnoRepository::countByIdOrderByGroupAsList() const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec(R"sql(SELECT E.nombre_equipo AS NombreEquipo, COUNT(A.idalumno) AS NOAlumnos FROM alumnos A, equipo E 
+        WHERE A.idequipo = E.idequipo
+        GROUP BY E.nombre_equipo
+        ORDER BY E.nombre_equipo)sql");
+
+    vector<AlumnoRepository::EquipoCantidadDTO> lista;
+    
+    for (const auto& fila : r) {
+        AlumnoRepository::EquipoCantidadDTO temp;
+        temp.nombre_equipo = (fila["NombreEquipo"].as<string>());
+        temp.Cantidad = (fila["NOAlumnos"].as<int>());
+
+        lista.push_back(temp);
+    }
+    
+    return lista;
 }
