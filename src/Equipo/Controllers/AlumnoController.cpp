@@ -78,3 +78,10 @@ AlumnoModel AlumnoController::fromJson(const crow::json::rvalue& json) const {
 
     return alumno;
 }
+
+crow::json::wvalue AlumnoController::toJsonDTO(const AlumnoRepository::EquipoCantidadDTO& entidad) const {
+    crow::json::wvalue res;
+    res["nombre_equipo"] = entidad.nombre_equipo;
+    res["Cantidad"] = entidad.Cantidad;
+    return res;
+}
