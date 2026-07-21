@@ -5,9 +5,10 @@
 
 > 🚧 **This project is currently under active development. Features and documentation may change.**
 >
-> 🚧 **Este proyecto esta actualmente bajo desarrollo activo. Caracteristicas, Funcionalidades y documentacion podria cambiar.**
+> 🚧 **Este proyecto se encuentra actualmente en desarrollo activo. Las características, funcionalidades y la documentación pueden cambiar.**
 
 *[English version below](#english-version)*
+
 
 API REST en C++ para el registro de equipos, alumnos y problemáticas de un hackathon. Construida con [Crow](https://crowcpp.org/) como microframework web y PostgreSQL como base de datos, usando [libpqxx](https://github.com/jtv/libpqxx) para la conexión.
 
@@ -141,11 +142,28 @@ El middleware CORS está habilitado globalmente para todos los orígenes (`*`) y
 
 ## Repositorios relacionados
 
-- 🎨 Frontend: https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend.git
+- 🎨 [Repositorio del Frontend](https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend)
+
+## Hoja de ruta
+
+### ✅ Completado
+- [x] Arquitectura CRUD genérica
+- [x] Arquitectura por capas (Controller, Service, Repository, Entity)
+- [x] Integración con PostgreSQL
+- [x] API REST
+- [x] Soporte para Docker
+- [x] Configuración mediante variables de entorno (`.env`)
+- [x] Soporte para CORS
+- [x] Endpoints CRUD genéricos
+
+### 🚧 Planeado
+- [ ] Documentación con OpenAPI / Swagger
+- [ ] Pruebas unitarias
+- [ ] Integración y despliegue continuo (CI/CD) con GitHub Actions
 
 ---
 
-## English version
+## English Version
 
 REST API in C++ for managing teams, students, and challenge tracks ("problemáticas") for a hackathon. Built with [Crow](https://crowcpp.org/) as the web microframework and PostgreSQL as the database, using [libpqxx](https://github.com/jtv/libpqxx) for the connection.
 
@@ -279,4 +297,21 @@ The CORS middleware is enabled globally for all origins (`*`) and the `GET`, `PO
 
 ## Related Repositories
 
-- 🎨 Frontend: https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend.git
+- 🎨 [Frontend Repository](https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend)
+
+## Roadmap
+
+### ✅ Completed
+- [x] Generic CRUD architecture
+- [x] Layered architecture (Controller, Service, Repository, Entity)
+- [x] PostgreSQL integration
+- [x] REST API
+- [x] Docker support
+- [x] Environment configuration (.env)
+- [x] CORS support
+- [x] Generic CRUD endpoints
+
+### 🚧 Planned
+- [ ] OpenAPI / Swagger documentation
+- [ ] Unit tests
+- [ ] CI/CD with GitHub Actions
