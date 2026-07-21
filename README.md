@@ -1,7 +1,7 @@
 # SistemaRegistro — Backend
 
 ![Status](https://img.shields.io/badge/Status-Work%20in%20Progress-yellow)
-![License](https://img.shields.io/badge/License-MIT-blue)
+![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-blue.svg)
 
 > 🚧 **This project is currently under active development. Features and documentation may change.**
 >
@@ -161,6 +161,16 @@ El middleware CORS está habilitado globalmente para todos los orígenes (`*`) y
 - [ ] Pruebas unitarias
 - [ ] Integración y despliegue continuo (CI/CD) con GitHub Actions
 
+## Licencia
+
+Este proyecto está licenciado bajo la Licencia PolyForm No Comercial 1.0.0.
+
+El uso comercial, incluyendo la venta, redistribución como producto comercial
+o integración en servicios de pago, requiere autorización previa del titular
+de los derechos de autor.
+
+Para más información, consulta el archivo [LICENSE](./LICENSE).
+
 ---
 
 ## English Version
@@ -315,3 +325,13 @@ The CORS middleware is enabled globally for all origins (`*`) and the `GET`, `PO
 - [ ] OpenAPI / Swagger documentation
 - [ ] Unit tests
 - [ ] CI/CD with GitHub Actions
+
+## License
+
+This project is licensed under the PolyForm Noncommercial License 1.0.0.
+
+Commercial use, including selling, redistribution as a commercial product,
+or integration into paid services, requires prior permission from the copyright
+holder.
+
+For more information, see the [LICENSE](./LICENSE) file.
