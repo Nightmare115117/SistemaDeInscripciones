@@ -1,10 +1,11 @@
-# SistemaRegistroHackaton — Backend
+# SistemaRegistro — Backend
 
 ![Status](https://img.shields.io/badge/Status-Work%20in%20Progress-yellow)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-> 🚧 This project is currently under active development. Features and documentation may change.
-> 🚧 Este proyecto esta actualmente bajo desarrollo activo. Caracteristicas, Funcionalidades y documentacion podria cambiar.
+> 🚧 **This project is currently under active development. Features and documentation may change.**
+>
+> 🚧 **Este proyecto esta actualmente bajo desarrollo activo. Caracteristicas, Funcionalidades y documentacion podria cambiar.**
 
 *[English version below](#english-version)*
 
