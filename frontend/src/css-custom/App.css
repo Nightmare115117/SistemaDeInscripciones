@@ -1,0 +1,29 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.glass-button {
+  position: relative;
+  isolation: isolate;
+
+  -webkit-backdrop-filter:
+    blur(4px)
+    saturate(1.5)
+    brightness(1.1);
+
+  backdrop-filter:
+    url("#lg-filter")
+    blur(4px)
+    saturate(1.5)
+    brightness(1.1);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.15),
+    inset 1px 1px 0 rgba(255,255,255,.35),
+    0 8px 20px rgba(0,0,0,.15);
+}
+
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: 100vh;
+}
