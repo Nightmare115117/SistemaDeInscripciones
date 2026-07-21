@@ -26,6 +26,7 @@ RegistroModel RegistroService::findById(int id) const {
 
 int RegistroService::insert(const RegistroModel& entity) {
     if (!validate(entity)) throw logic_error("El id no puede ser 0 ni negativo");
+    if (repo.countById() == 47) throw logic_error("No puede haber más de 47 equipos");
 
     return repo.insert(entity);
 }
