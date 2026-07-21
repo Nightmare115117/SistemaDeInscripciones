@@ -132,6 +132,10 @@ El middleware CORS está habilitado globalmente para todos los orígenes (`*`) y
 
 ![Modelo de la base de datos](assets/DatabaseModel.png)
 
+## Repositorios relacionados
+
+- 🎨 Frontend: https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend.git
+
 ---
 
 ## English version
@@ -265,3 +269,7 @@ The CORS middleware is enabled globally for all origins (`*`) and the `GET`, `PO
 ### Database Model
 
 ![DatabaseModel](assets/DatabaseModel.png)
+
+## Related Repositories
+
+- 🎨 Frontend: https://github.com/Nightmare115117/SistemaDeInscripciones-Frontend.git
