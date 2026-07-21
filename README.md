@@ -128,7 +128,7 @@ Rutas adicionales:
 
 El middleware CORS está habilitado globalmente para todos los orígenes (`*`) y los métodos `GET`, `POST`, `PUT`, `DELETE`, útil en desarrollo. Ajusta el origen en `main.cpp` antes de desplegar a producción.
 
-## Modelo de la base de datos
+### Modelo de la base de datos
 
 ![Modelo de la base de datos](assets/DatabaseModel.png)
 
