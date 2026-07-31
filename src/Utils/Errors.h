@@ -1,0 +1,9 @@
+enum JWTError {
+
+    NONE,
+    INVALID_SIGNATURE,
+    EXPIRED,
+    MALFORMED_TOKEN,
+    MISSING_CLAIM,
+    WRONG_ISSUER
+};
