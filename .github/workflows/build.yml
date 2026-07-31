@@ -31,3 +31,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/mi-api:latest
+        env:
+          BUILDKIT_PROGRESS: plain
