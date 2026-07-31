@@ -8,6 +8,9 @@
 #include "Registro/Repositories/RegistroRepository.h"
 #include "Registro/Services/RegistroService.h"
 #include "Registro/Controllers/RegistroController.h"
+#include "Admin/Repo/AdminRepo.h"
+#include "Admin/Service/AdminService.h"
+#include "Admin/Controller/AdminController.h"
 #include "Equipo/Repositories/EquipoRepository.h"
 #include "Equipo/Services/EquipoService.h"
 #include "Equipo/Controllers/EquipoController.h"
@@ -67,12 +70,17 @@ int main() {
     ContactoEmergenciaService contactoService(contactoRepo);
     ContactoEmergenciaController contactoController(contactoService);
 
+    AdminRepo adminRepo(config);
+    AdminService adminService(adminRepo);
+    AdminController adminController(adminService);
+
     registroController.registrarRutas(app, "/api/registros");
     registroController.contadorDeRegistros(app, registroService);
     equipoController.registrarRutas(app, "/api/equipos");
     universidadController.registrarRutas(app, "/api/universidades");
     problemaController.registrarRutas(app, "/api/problematica");
     contactoController.registrarRutas(app, "/api/contactos-emergencia");
+    adminController.registrarRutas(app, "/api/admin");
 
     // Ruta de prueba de conexión
     CROW_ROUTE(app, "/api/test-db")
