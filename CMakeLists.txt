@@ -52,6 +52,9 @@ pkg_check_modules(PQXX REQUIRED libpqxx)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/DBConfig/*.cpp")
 add_executable(mi_api ${SOURCES})
+
+target_compile_definitions(mi_api PRIVATE JWT_DISABLE_PICOJSON)
+
 target_include_directories(mi_api PRIVATE 
 src 
 ${PQXX_INCLUDE_DIRS} 
