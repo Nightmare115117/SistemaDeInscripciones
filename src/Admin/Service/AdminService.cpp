@@ -3,8 +3,8 @@
 
 using namespace std;
 
-AdminService::AdminService(AdminRepo& repo)
-    : Service<AdminModel, AdminRepo>(repo) {}
+AdminService::AdminService(AdminRepo& repo, PasswordHasher& hasher)
+    : Service<AdminModel, AdminRepo>(repo), hasher(hasher) {}
 
 bool AdminService::validate(const AdminModel& entity) {
     if (entity.getNombre().empty()) return false;
@@ -25,7 +25,9 @@ AdminModel AdminService::findById(int id) const {
 int AdminService::insert(const AdminModel& entity) {
     if (!validate(entity)) throw logic_error("Los datos del Admin son equivocados");
 
-    return repo.insert(entity);
+    AdminModel entityC = entity;
+    entityC.setContrasena(hasher.hash(entityC.getContrasena()));
+    return repo.insert(entityC);
 }
 
 bool AdminService::update(const AdminModel& entity) {
