@@ -6,7 +6,12 @@ class AuthMiddleware {
 
 public:
 
-    struct context {};
+    struct context {
+        bool authenticated = false;
+        int adminId = -1;
+        std::string username;
+        std::string role;
+    };
 
     void before_handle(crow::request& reg, crow::response& res, context& ctx);
 

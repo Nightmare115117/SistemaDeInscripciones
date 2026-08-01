@@ -1,32 +1,43 @@
 #include "crow.h"
 #include "crow/middlewares/cors.h"
 #include "DBConfig/DBConfig.h"
+#include "Middleware/AuthMiddleware.h"
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
 
-#include "Registro/Repositories/RegistroRepository.h"
-#include "Registro/Services/RegistroService.h"
-#include "Registro/Controllers/RegistroController.h"
 #include "Admin/Repo/AdminRepo.h"
 #include "Admin/Service/AdminService.h"
 #include "Admin/Controller/AdminController.h"
-#include "Equipo/Repositories/EquipoRepository.h"
-#include "Equipo/Services/EquipoService.h"
-#include "Equipo/Controllers/EquipoController.h"
-#include "Universidad/Repositories/UniversityRepository.h"
-#include "Universidad/Services/UniversityService.h"
-#include "Universidad/Controllers/UniversidadController.h"
-#include "Problematica/Repositories/ProblemaRepository.h"
-#include "Problematica/Service/ProblemaService.h"
-#include "Problematica/Controller/ProblemaController.h"
+
+#include "Equipo/Repositories/AlumnoRepository.h"
+#include "Equipo/Services/AlumnoService.h"
+#include "Equipo/Controllers/AlumnoController.h"
+
 #include "Equipo/Repositories/ContactoEmergenciaRepository.h"
 #include "Equipo/Services/ContactoEmergenciaService.h"
 #include "Equipo/Controllers/ContactoEmergenciaController.h"
 
+#include "Equipo/Repositories/EquipoRepository.h"
+#include "Equipo/Services/EquipoService.h"
+#include "Equipo/Controllers/EquipoController.h"
+
+#include "Universidad/Repositories/UniversityRepository.h"
+#include "Universidad/Services/UniversityService.h"
+#include "Universidad/Controllers/UniversidadController.h"
+
+#include "Problematica/Repositories/ProblemaRepository.h"
+#include "Problematica/Service/ProblemaService.h"
+#include "Problematica/Controller/ProblemaController.h"
+
+#include "Registro/Repositories/RegistroRepository.h"
+#include "Registro/Services/RegistroService.h"
+#include "Registro/Controllers/RegistroController.h"
+
 using namespace std;
-using namespace crow;
 using namespace pqxx;
+
+using App = crow::App<crow::CORSHandler, AuthMiddleware>;
 
 /**  string obtenerDatabaseUrl() {
     const char* db_url = getenv("DATABASE_URL");
@@ -38,9 +49,9 @@ using namespace pqxx;
 */
 
 int main() {
-    App <CORSHandler> app;
+    App app;
 
-    auto& cors = app.get_middleware<CORSHandler>();
+    auto& cors = app.get_middleware<crow::CORSHandler>();
     cors
         .global()
         .headers("Content-Type", "Authorization")
@@ -49,6 +60,10 @@ int main() {
 
     DBConfig config;
     string databaseUrl = config.obtenerDatabaseUrl();
+
+    AlumnoRepository alumnoRepo(config);
+    AlumnoService alumnoService(alumnoRepo);
+    AlumnoController alumnoController(alumnoService);
 
     RegistroRepository registroRepo(config);
     RegistroService registroService(registroRepo);
@@ -70,8 +85,10 @@ int main() {
     ContactoEmergenciaService contactoService(contactoRepo);
     ContactoEmergenciaController contactoController(contactoService);
 
+    PasswordHasher hasher = PasswordHasher(12);
+
     AdminRepo adminRepo(config);
-    AdminService adminService(adminRepo);
+    AdminService adminService(adminRepo, hasher);
     AdminController adminController(adminService);
 
     registroController.registrarRutas(app, "/api/registros");
@@ -81,6 +98,7 @@ int main() {
     problemaController.registrarRutas(app, "/api/problematica");
     contactoController.registrarRutas(app, "/api/contactos-emergencia");
     adminController.registrarRutas(app, "/api/admin");
+    alumnoController.registrarRutas(app, "/api/alumno");
 
     // Ruta de prueba de conexión
     CROW_ROUTE(app, "/api/test-db")
@@ -91,15 +109,15 @@ int main() {
             pqxx::result r = txn.exec("SELECT NOW()");
             txn.commit();
 
-            json::wvalue res;
+            crow::json::wvalue res;
             res["status"] = "ok";
             res["hora_servidor"] = r[0][0].c_str();
-            return response(200, res);
+            return crow::response(200, res);
         } catch (const exception& e) {
-            json::wvalue res;
+            crow::json::wvalue res;
             res["status"] = "error";
             res["mensaje"] = e.what();
-            return response(500, res);
+            return crow::response(500, res);
         }
     });
 

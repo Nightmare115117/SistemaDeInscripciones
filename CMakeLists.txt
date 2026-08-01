@@ -65,4 +65,5 @@ Threads::Threads
 ${PQXX_LIBRARIES} pq 
 jwt-cpp::jwt-cpp
 OpenSSL::Crypto
-nlohmann_json::nlohmann_json)
+nlohmann_json::nlohmann_json
+bcrypt)
