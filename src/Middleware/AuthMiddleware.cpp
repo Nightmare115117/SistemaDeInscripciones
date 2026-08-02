@@ -15,12 +15,12 @@ void AuthMiddleware::before_handle(
     string path = req.url;
 
     if (
-        (path == "/api/test-db") ||
-        (path == "/api/registros" && req.method == HTTPMethod::POST) ||
-        (path == "/api/equipos" && req.method == HTTPMethod::POST) ||
-        (path == "B" && req.method == HTTPMethod::GET) ||
-        (path == "/api/alumno" && req.method == HTTPMethod::POST) ||
-        (path == "/api/universidades" && req.method == HTTPMethod::GET)
+        (path == "/api/test-db") || //prueba para la Coneccion a la DB
+        (path == "/api/registros" && req.method == HTTPMethod::POST) || //Ruta insersion de Registros
+        (path == "/api/equipos" && req.method == HTTPMethod::POST) ||  //Ruta insersion de Equipos
+        (path == "/api/registro/count" && req.method == HTTPMethod::GET) || //Ruta para contar los registros
+        (path == "/api/alumno" && req.method == HTTPMethod::POST) ||    //Ruta paara insertar alumnos
+        (path == "/api/universidades" && req.method == HTTPMethod::GET) //Ruta para listar las universidades
         ) 
     {
         return;
