@@ -22,7 +22,7 @@ COPY . .
 
 RUN rm -rf build && mkdir build && cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release .. && \
-    make -j$(nproc)
+    cmake --build . -j$(nproc)
 
 EXPOSE 8080
 CMD ["./build/mi_api"]
