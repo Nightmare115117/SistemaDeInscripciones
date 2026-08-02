@@ -39,7 +39,7 @@ FetchContent_MakeAvailable(jwt-cpp)
 
 FetchContent_Declare(
     bcrypt
-    GIT_REPOSITORY https://github.com/trusch/libbcrypt.git
+    GIT_REPOSITORY https://github.com/Nightmare115117/libbcrypt.git
     GIT_TAG master
 )
 
