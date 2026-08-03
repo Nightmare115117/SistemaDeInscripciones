@@ -13,14 +13,17 @@ using JWTBuilder = jwt::builder<jwt::default_clock, jwt::traits::nlohmann_json>;
 using JWTDecoded = jwt::decoded_jwt<jwt::traits::nlohmann_json>;
 using JWTVerifier = jwt::verifier<jwt::default_clock, jwt::traits::nlohmann_json>;
 
-string JWT::SECRET;
-
-void JWT::setSecret(const string& secret) {
-    SECRET = secret;
-}
+string JWT::SECRET = [] {
+    const char* envSecret = getenv("JWT_SECRET");
+    return envSecret ? string(envSecret) : string("");
+}();
 
 string JWT::generarToken(int adminId, const string& username){
     try {
+
+        if (SECRET.empty()) 
+            throw runtime_error("No se encontro el JWT_KEY");
+
         auto token = create()
         .set_type("JWT")
     .set_issuer("mi_api")
@@ -46,6 +49,9 @@ JWT::TokenInfo JWT::validarToken(const string& token) {
     
     try {
         
+        if (SECRET.empty()) 
+            throw runtime_error("No se encontro el JWT_KEY");
+
         if (token.empty()) throw logic_error("No hay un token existente");
 
         auto tokenDecode = decode(token);
@@ -86,7 +92,7 @@ JWT::TokenInfo JWT::validarToken(const string& token) {
 
     } catch (const exception& e) {
 
-        JWTError error;
+        JWTError error = UNKNOWN;
 
         if (firmaValidada) {
             if (!expValidada) {

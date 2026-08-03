@@ -1,4 +1,5 @@
 #include "AdminService.h"
+#include "Security/Crypto.h"
 #include <stdexcept>
 
 using namespace std;
@@ -14,12 +15,19 @@ bool AdminService::validate(const AdminModel& entity) {
 }
 
 vector<AdminModel> AdminService::findAll() const {
-    return repo.findAll();
+    vector<AdminModel> decifrados;
+    for (AdminModel entity : repo.findAll()) {
+        entity.setCorreo(AES::decrypt(entity.getCorreo()));
+        decifrados.push_back(entity);
+    }
+    return decifrados;
 }
 
 AdminModel AdminService::findById(int id) const {
     if (id <= 0) throw logic_error("El id debe ser positivo");
-    return repo.findById(id);
+    AdminModel admin = repo.findById(id);
+    admin.setCorreo(AES::decrypt(admin.getCorreo()));
+    return admin;
 }
 
 int AdminService::insert(const AdminModel& entity) {
@@ -27,6 +35,7 @@ int AdminService::insert(const AdminModel& entity) {
 
     AdminModel entityC = entity;
     entityC.setContrasena(hasher.hash(entityC.getContrasena()));
+    entityC.setCorreo(AES::encrypt(entityC.getCorreo()));
     return repo.insert(entityC);
 }
 
@@ -40,4 +49,9 @@ bool AdminService::update(const AdminModel& entity) {
 bool AdminService::remove(int id) {
     if (id <= 0) throw logic_error("El id debe ser positivo");
     return repo.remove(id);
+}
+
+bool AdminService::login(const AdminModel& entity) {
+    
+    return false;
 }
