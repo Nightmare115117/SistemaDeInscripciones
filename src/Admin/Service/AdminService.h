@@ -20,4 +20,5 @@ public:
     bool remove(int id) override;
 
     bool validate(const AdminModel& entity) override;
+    bool login(const AdminModel& entity);
 };

@@ -9,8 +9,6 @@ class JWT {
 
 public:
 
-    static void setSecret(const std::string& secret);
-
     struct TokenInfo
     {
         bool valido;

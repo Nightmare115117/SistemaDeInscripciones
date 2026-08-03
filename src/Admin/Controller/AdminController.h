@@ -12,4 +12,18 @@ public:
 
     crow::json::wvalue toJson(const AdminModel& entity) const override;
     AdminModel fromJson(const crow::json::rvalue& json) const override;
+
+    template <typename AppType>
+    void HascerInicioDeSesion (AppType& app, const AdminService& service) {
+        CROW_ROUTE(app, "/api/admin/login")([&service]() {
+            try {
+                crow::json::wvalue res;
+                return;
+            } catch (const std::exception& e) {
+                crow::json::wvalue res;
+                res["Error"] = e.what();
+                return crow::response(500, res);
+            }
+        });
+    }
 };

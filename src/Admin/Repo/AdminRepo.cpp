@@ -95,3 +95,24 @@ bool AdminRepo::remove(int id) {
 
     return r.affected_rows() > 0;
 }
+
+AdminModel AdminRepo::findByCorreo (const string& correo) const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec(R"sql(SELECT adminid, 
+        nombre, correo, 
+        contrasena FROM admin WHERE correo = $1)sql",
+        params{
+            correo // param $1
+        });
+    
+    if (r.empty()) 
+        throw logic_error("No existe un Admin con el id mencionado");
+
+    AdminModel admin(r[0]["nombre"].as<string>());
+        admin.setId(r[0]["adminid"].as<int>());
+        admin.setCorreo(r[0]["correo"].as<string>());
+        admin.setContrasena(r[0]["contrasena"].as<string>());
+    
+    return admin;
+}

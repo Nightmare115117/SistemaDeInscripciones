@@ -1,4 +1,5 @@
 #include "AlumnoService.h"
+#include "Security/Crypto.h"
 #include <stdexcept>
 
 using namespace std;
@@ -37,8 +38,10 @@ int AlumnoService::insert(const AlumnoModel& entity) {
         if (cantidad >= 6 || cantidad <= 2) 
             throw runtime_error("Error la cantidad de integrantes en el Equipo es mayor a 5 o es menor de 3");
     }
-
-    return repo.insert(entity);
+    AlumnoModel entityC = entity;
+    entityC.setCorreo(AES::encrypt(entityC.getCorreo()));
+    entityC.setNumeroTel(AES::encrypt(entityC.getNumeroTel()));
+    return repo.insert(entityC);
 }
 
 bool AlumnoService::update(const AlumnoModel& entity) {

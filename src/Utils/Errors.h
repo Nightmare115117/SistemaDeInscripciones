@@ -1,6 +1,7 @@
 enum JWTError {
 
     NONE,
+    UNKNOWN,
     INVALID_SIGNATURE,
     EXPIRED,
     MALFORMED_TOKEN,
