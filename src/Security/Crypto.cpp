@@ -11,8 +11,15 @@
 using namespace std;
 
 string AES::KEY = [] {
-    const char* envSecret = getenv("AES:KEY");
-    return envSecret ? string(envSecret) : string("");
+    const char* envSecret = getenv("AES_KEY");
+
+    if (!envSecret)
+    {
+        cerr << "AES_KEY no configurada\n";
+        exit(EXIT_FAILURE);
+    }
+
+    return std::string(envSecret);
 }();
 
 string AES::encrypt(const string& dato) {

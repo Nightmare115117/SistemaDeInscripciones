@@ -23,6 +23,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         condicion,
         medicamento,
         idcontacto
+        iduniversidad
     FROM alumnos)sql");
 
     vector<AlumnoModel> lista;
@@ -40,6 +41,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         alumno.setCondicionMedica(fila["condicion"].as<string>());
         alumno.setMedicamento(fila["medicamento"].as<string>());
         alumno.setIdContacto(fila["idcontacto"].as<int>());
+        alumno.setIdUniversidad(fila["iduniversidad"].as<int>());
         lista.push_back(alumno);
     }
 
@@ -61,7 +63,8 @@ AlumnoModel AlumnoRepository::findById(int id) const{
         alergias,
         condicion,
         medicamento,
-        idcontacto
+        idcontacto,
+        iduniversidad
     FROM alumnos WHERE idalumno = $1)sql", params{id});
 
     if (r.empty()) {
@@ -80,6 +83,7 @@ AlumnoModel AlumnoRepository::findById(int id) const{
     alumno.setCondicionMedica(r[0]["condicion"].as<string>());
     alumno.setMedicamento(r[0]["medicamento"].as<string>());
     alumno.setIdContacto(r[0]["idcontacto"].as<int>());
+    alumno.setIdUniversidad(r[0]["iduniversidad"].as<int>());
 
     return alumno;
 }
@@ -98,8 +102,9 @@ int AlumnoRepository::insert(const AlumnoModel& entity) {
         alergias, 
         condicion, 
         medicamento, 
-        idcontacto) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+        idcontacto,
+        iduniversidad) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
         RETURNING idalumno)sql", params{
         entity.getNombre(), // parametro 1
         entity.getIdEquipo(), // parametro 2
@@ -111,7 +116,8 @@ int AlumnoRepository::insert(const AlumnoModel& entity) {
         entity.getAlergias(), // parametro 8
         entity.getCondicionMedica(), // parametro 9
         entity.getMedicamento(), // parametro 10
-        entity.getIdContacto() // parametro 11
+        entity.getIdContacto(), // parametro 11
+        entity.getIdUniversidad() //parametro 12
     });
 
     txn.commit();
@@ -133,8 +139,9 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         alergias = CASE WHEN $8 <> '' THEN $8 ELSE alergias END,
         condicion = CASE WHEN $9 <> '' THEN $9 ELSE condicion END,
         medicamento = CASE WHEN $10 <> '' THEN $10 ELSE medicamento END,
-        idcontacto = CASE WHEN $11 <> -1 THEN $11 ELSE idcontacto END
-    WHERE idalumno = $12)sql", params{
+        idcontacto = CASE WHEN $11 <> -1 THEN $11 ELSE idcontacto END,
+        iduniversidad = CASE WHEN $12 <> -1 THE  $12 ELSE iduniversidad END,
+    WHERE idalumno = $13)sql", params{
         entity.getNombre(),
         entity.getIdEquipo(),
         entity.firmoterminos(),
@@ -146,6 +153,7 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         entity.getCondicionMedica(),
         entity.getMedicamento(),
         entity.getIdContacto(),
+        entity.getIdUniversidad(),
         entity.getId()
     });
 

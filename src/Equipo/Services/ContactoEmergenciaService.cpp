@@ -1,5 +1,6 @@
 #include "ContactoEmergenciaService.h"
 #include <stdexcept>
+#include "Security/Crypto.h"
 
 using namespace std;
 
@@ -11,23 +12,34 @@ bool ContactoEmergenciaService::validate(const ContactoEmergenciaModel& entity) 
 }
 
 vector<ContactoEmergenciaModel> ContactoEmergenciaService::findAll() const {
-    return repo.findAll();
+    vector<ContactoEmergenciaModel> lista;
+    for (ContactoEmergenciaModel entity : repo.findAll()) {
+        entity.setTelefono(AES::decrypt(entity.getTelefono()));
+        lista.push_back(entity);
+    }
+    return lista;
 }
 
 ContactoEmergenciaModel ContactoEmergenciaService::findById(int id) const {
     if (id <= 0) throw logic_error("El id debe ser positivo");
-    return repo.findById(id);
+    ContactoEmergenciaModel entity = repo.findById(id);
+    entity.setTelefono(AES::decrypt(entity.getTelefono()));
+    return entity;
 }
 
 int ContactoEmergenciaService::insert(const ContactoEmergenciaModel& entity) {
     if (!validate(entity)) throw logic_error("Los datos del contacto de emergencia no son válidos");
-    return repo.insert(entity);
+    ContactoEmergenciaModel entityC = entity;
+    entityC.setTelefono(AES::encrypt(entityC.getTelefono()));
+    return repo.insert(entityC);
 }
 
 bool ContactoEmergenciaService::update(const ContactoEmergenciaModel& entity) {
     if (entity.getId() <= 0) throw logic_error("El id debe ser positivo");
     if (!validate(entity)) throw logic_error("Los datos del contacto de emergencia no son válidos");
-    return repo.update(entity);
+    ContactoEmergenciaModel entityC = entity;
+    entityC.setTelefono(AES::encrypt(entityC.getTelefono()));
+    return repo.update(entityC);
 }
 
 bool ContactoEmergenciaService::remove(int id) {
