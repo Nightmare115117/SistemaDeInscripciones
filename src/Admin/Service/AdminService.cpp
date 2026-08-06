@@ -52,6 +52,18 @@ bool AdminService::remove(int id) {
 }
 
 bool AdminService::login(const AdminModel& entity) {
+    if (entity.getCorreo().empty()) 
+        throw logic_error("El correo no puede estar vacio");
     
-    return false;
+    if(entity.getContrasena().empty())
+        throw logic_error("La contraseña no puede estar vacia");
+
+    AdminModel admin = repo.findByCorreo(AES::encrypt(entity.getCorreo()));
+
+    if (AES::decrypt(admin.getCorreo()) != entity.getCorreo())
+        return false;
+
+    return hasher.verificar(entity.getContrasena(), admin.getContrasena());
+        
+    
 }

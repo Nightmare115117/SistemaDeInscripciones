@@ -18,6 +18,7 @@ crow::json::wvalue AlumnoController::toJson(const AlumnoModel& entidad) const {
     json["condicion"] = entidad.getCondicionMedica();
     json["medicamento"] = entidad.getMedicamento();
     json["idContacto"] = entidad.getIdContacto();
+    json["idUniversidad"] = entidad.getIdUniversidad();
     return json;
 }
 

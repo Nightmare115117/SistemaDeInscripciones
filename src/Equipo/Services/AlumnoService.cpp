@@ -8,27 +8,28 @@ AlumnoService::AlumnoService(AlumnoRepository& repo)
     : Service<AlumnoModel, AlumnoRepository>(repo) {}
 
 bool AlumnoService::validate(const AlumnoModel& entity) {
-    if (entity.getNombre().empty()) return false;
-    if (entity.getIdEquipo() <= 0) return false;
-    if (!entity.firmoterminos()) return false;
-    if (entity.getCorreo().empty()) return false;
-    if (entity.getNumeroTel().empty()) return false;
-    if (entity.getApellidoPaterno().empty()) return false;
-    if (entity.getApellidoMaterno().empty()) return false;
-    if (entity.getAlergias().empty()) return false;
-    if (entity.getCondicionMedica().empty()) return false;
-    if (entity.getMedicamento().empty()) return false;
-    if (entity.getIdContacto() <= 0) return false;
+    if (entity.getIdEquipo() <= 0 && entity.getIdEquipo() != -1) return false;
+    if (entity.getIdContacto() <= 0 && entity.getIdContacto() != -1) return false;
+    if (entity.getIdUniversidad() <= 0 && entity.getIdUniversidad() != -1) return false;
     return true;
 }
 
 vector<AlumnoModel> AlumnoService::findAll() const {
-    return repo.findAll();
+    vector<AlumnoModel> decode;
+    for (AlumnoModel entity : repo.findAll()) {
+        entity.setCorreo(AES::decrypt(entity.getCorreo()));
+        entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
+        decode.push_back(entity);
+    }
+    return decode;
 }
 
 AlumnoModel AlumnoService::findById(int id) const {
     if (id <= 0) throw logic_error("El id debe ser positivo");
-    return repo.findById(id);
+    AlumnoModel alumno = repo.findById(id);
+    alumno.setCorreo(AES::decrypt(alumno.getCorreo()));
+    alumno.setNumeroTel(AES::decrypt(alumno.getNumeroTel()));
+    return alumno;
 }
 
 int AlumnoService::insert(const AlumnoModel& entity) {

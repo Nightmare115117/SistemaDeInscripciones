@@ -8,7 +8,6 @@ crow::json::wvalue EquipoController::toJson(const EquipoModel& entidad) const {
     crow::json::wvalue json;
     json["id"] = entidad.getId();
     json["nombre"] = entidad.getNombre();
-    json["idUniversidad"] = entidad.getIdUniversidad();
     json["idLider"] = entidad.getIdLider();
     json["idProblematica"] = entidad.getIdProblematica();
     return json;

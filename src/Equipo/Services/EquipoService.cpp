@@ -8,7 +8,6 @@ EquipoService::EquipoService(EquipoRepository& repo)
 
 bool EquipoService::validate(const EquipoModel& entity) {
     if (entity.getNombre().empty()) return false;
-    if (entity.getIdUniversidad() <= 0) return false;
     if (entity.getIdLider() <= 0) return false;
     if (entity.getIdProblematica() <= 0) return false;
     return true;

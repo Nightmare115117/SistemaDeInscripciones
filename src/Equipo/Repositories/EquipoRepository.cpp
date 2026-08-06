@@ -10,13 +10,12 @@ EquipoRepository::EquipoRepository(DBConfig& dbConfig) : dbConfig(dbConfig) {}
 vector<EquipoModel> EquipoRepository::findAll() const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idequipo, nombre_equipo, iduniversidad, idlider, idproblematica FROM equipo");
+    result r = txn.exec("SELECT idequipo, nombre_equipo, idlider, idproblematica FROM equipo");
 
     vector<EquipoModel> lista;
     for (const auto &fila : r) {
         EquipoModel equipo(
             fila["nombre_equipo"].as<string>(),
-            fila["iduniversidad"].as<int>(),
             fila["idlider"].as<int>(),
             fila["idproblematica"].as<int>()
         );
@@ -30,7 +29,7 @@ vector<EquipoModel> EquipoRepository::findAll() const {
 EquipoModel EquipoRepository::findById(int id) const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idequipo, nombre_equipo, iduniversidad, idlider, idproblematica FROM equipo WHERE idequipo = $1", params{id});
+    result r = txn.exec("SELECT idequipo, nombre_equipo, idlider, idproblematica FROM equipo WHERE idequipo = $1", params{id});
 
     if (r.empty()) {
         throw logic_error("No existe un equipo con el id mencionado");
@@ -38,7 +37,6 @@ EquipoModel EquipoRepository::findById(int id) const {
 
     EquipoModel equipo(
         r[0]["nombre_equipo"].as<string>(),
-        r[0]["iduniversidad"].as<int>(),
         r[0]["idlider"].as<int>(),
         r[0]["idproblematica"].as<int>()
     );
@@ -53,7 +51,6 @@ int EquipoRepository::insert(const EquipoModel& entity) {
         VALUES ($1, $2, $3, $4)
         RETURNING idequipo)sql", params{
         entity.getNombre(),
-        entity.getIdUniversidad(),
         entity.getIdLider(),
         entity.getIdProblematica()
     });
@@ -72,7 +69,6 @@ bool EquipoRepository::update(const EquipoModel& entity) {
         idproblematica = CASE WHEN $4 <> -1 THEN $4 ELSE idproblematica END
         WHERE idequipo = $5)sql", params{
         entity.getNombre(),
-        entity.getIdUniversidad(),
         entity.getIdLider(),
         entity.getIdProblematica(),
         entity.getId()

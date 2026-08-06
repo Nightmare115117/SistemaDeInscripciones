@@ -2,7 +2,7 @@
 
 using namespace std;
 
-AlumnoModel::AlumnoModel() : AlumnoModel("", 0, false, "", 0, "", "", "", "", "", 0) {}
+AlumnoModel::AlumnoModel() : AlumnoModel("", 0, false, "", 0, "", "", "", "", "", 0, 0) {}
 
 AlumnoModel::AlumnoModel(const string& nombre) :Entity(0) {
     this->nombre = nombre;
@@ -11,7 +11,7 @@ AlumnoModel::AlumnoModel(const string& nombre) :Entity(0) {
 AlumnoModel::AlumnoModel(const string& nombre, int idEquipo, bool firmo,
 const string& correo, const string& numeroTel, const string& apellidoPaterno,
 const string& apellidoMaterno, const string& alergias,
-const string& condicionMedica, const string& medicamento, int idContacto) : Entity(0) {
+const string& condicionMedica, const string& medicamento, int idContacto, int idUniversidad) : Entity(0) {
     this->nombre = nombre;
     this->idEquipo = idEquipo;
     this->firmoTerminos = firmo;
@@ -23,6 +23,7 @@ const string& condicionMedica, const string& medicamento, int idContacto) : Enti
     this->condicionMedica = condicionMedica;
     this->medicamento = medicamento;
     this->idContacto = idContacto;
+    this->idUniversidad = idUniversidad;
 }
 
 const string& AlumnoModel::getNombre() const {
@@ -77,6 +78,10 @@ int AlumnoModel::getIdContacto() const {
     return idContacto;
 }
 
+int AlumnoModel::getIdUniversidad() const {
+    return idUniversidad;
+}
+
 void AlumnoModel::setFirmoTerminos(bool firmo) {
     this->firmoTerminos = firmo;
 }
@@ -111,4 +116,8 @@ void AlumnoModel::setMedicamento(const string& medicamento) {
 
 void AlumnoModel::setIdContacto(int id) {
     this->idContacto = id;
+}
+
+void AlumnoModel::setIdUniversidad(int idUniversidad){
+    this->idUniversidad = idUniversidad;
 }
