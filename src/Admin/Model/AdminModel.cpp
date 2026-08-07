@@ -21,6 +21,14 @@ const string& AdminModel::getCorreo() const {
     return correo;
 }
 
+const string& AdminModel::getCorreoAES() const {
+    return correoAES;
+}
+
+const string& AdminModel::getCorreoHMAC() const {
+    return correoHMAC;
+}
+
 const string& AdminModel::getContrasena() const {
     return contraseña;
 }
@@ -32,6 +40,14 @@ void AdminModel::setNombre(const string& nombre) {
 
 void AdminModel::setCorreo(const string& correo) {
     this->correo = correo;
+}
+
+void AdminModel::setCorreoAES(const string& correoAES) {
+    this->correoAES = correoAES;
+}
+
+void AdminModel::setCorreoHMAC(const string& correoHMAC) {
+    this->correoHMAC = correoHMAC;
 }
 
 void AdminModel::setContrasena(const string& contrasena) {

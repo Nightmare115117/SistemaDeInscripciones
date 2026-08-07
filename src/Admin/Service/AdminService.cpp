@@ -1,5 +1,6 @@
 #include "AdminService.h"
 #include "Security/Crypto.h"
+#include "Security/HMAC.h"
 #include <stdexcept>
 
 using namespace std;
@@ -35,7 +36,8 @@ int AdminService::insert(const AdminModel& entity) {
 
     AdminModel entityC = entity;
     entityC.setContrasena(hasher.hash(entityC.getContrasena()));
-    entityC.setCorreo(AES::encrypt(entityC.getCorreo()));
+    entityC.setCorreoAES(AES::encrypt(entityC.getCorreo()));
+    entityC.setCorreoHMAC(HMACsecurity::generate(entityC.getCorreo()));
     return repo.insert(entityC);
 }
 
@@ -58,7 +60,7 @@ bool AdminService::login(const AdminModel& entity) {
     if(entity.getContrasena().empty())
         throw logic_error("La contraseña no puede estar vacia");
 
-    AdminModel admin = repo.findByCorreo(AES::encrypt(entity.getCorreo()));
+    AdminModel admin = repo.findByCorreoHMAC(AES::encrypt(entity.getCorreo()));
 
     if (AES::decrypt(admin.getCorreo()) != entity.getCorreo())
         return false;

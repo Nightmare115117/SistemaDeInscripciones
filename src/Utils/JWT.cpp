@@ -15,7 +15,17 @@ using JWTVerifier = jwt::verifier<jwt::default_clock, jwt::traits::nlohmann_json
 
 string JWT::SECRET = [] {
     const char* envSecret = getenv("JWT_SECRET");
-    return envSecret ? string(envSecret) : string("");
+
+    if (!envSecret || string(envSecret).empty())
+    {
+        cerr << "AES_KEY no configurada\n";
+        exit(EXIT_FAILURE);
+        
+    } else {
+        cout << "JWT_SECRET cargada Correctamente\n";
+    }
+
+    return std::string(envSecret);
 }();
 
 string JWT::generarToken(int adminId, const string& username){
