@@ -13,13 +13,16 @@ using namespace std;
 string AES::KEY = [] {
     const char* envSecret = getenv("AES_KEY");
 
-    if (!envSecret)
+    if (!envSecret || string(envSecret).empty())
     {
         cerr << "AES_KEY no configurada\n";
         exit(EXIT_FAILURE);
+        
+    } else {
+        cout << "AES_KEY cargada Correctamente\n";
     }
 
-    return std::string(envSecret);
+    return string(envSecret);
 }();
 
 string AES::encrypt(const string& dato) {

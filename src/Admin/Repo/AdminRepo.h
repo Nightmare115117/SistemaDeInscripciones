@@ -18,5 +18,5 @@ public:
     bool update (const AdminModel& Entity) override;
     bool remove (int id) override;
 
-    AdminModel findByCorreo (const std::string& correo) const;
+    AdminModel findByCorreoHMAC (const std::string& correo) const;
 }; 
