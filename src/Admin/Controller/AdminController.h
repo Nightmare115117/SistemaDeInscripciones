@@ -15,7 +15,7 @@ public:
     AdminModel fromJson(const crow::json::rvalue& json) const override;
 
     template <typename AppType>
-    void HascerInicioDeSesion (AppType& app, const AdminService& service) {
+    void HacerInicioDeSesion (AppType& app, const AdminService& service) {
         CROW_ROUTE(app, "/api/admin/login")
         .methods(crow::HTTPMethod::PUT)([&service](const crow::request& req) {
             try {
