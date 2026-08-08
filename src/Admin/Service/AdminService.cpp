@@ -9,9 +9,9 @@ AdminService::AdminService(AdminRepo& repo, PasswordHasher& hasher)
     : Service<AdminModel, AdminRepo>(repo), hasher(hasher) {}
 
 bool AdminService::validate(const AdminModel& entity) {
-    if (entity.getNombre().empty()) return false;
     if (entity.getCorreo().empty()) return false;
     if (entity.getContrasena().empty()) return false;
+    if (entity.getNombre().empty()) return false;
     return true;
 }
 
@@ -43,9 +43,17 @@ int AdminService::insert(const AdminModel& entity) {
 
 bool AdminService::update(const AdminModel& entity) {
     if (entity.getId() <= 0) throw logic_error("El id debe ser positivo");
-    if (!validate(entity)) throw logic_error("Los datos del admin no son válidos");
+    AdminModel copia = entity;
+    if (!entity.getCorreo().empty()) {
+        copia.setCorreoAES(AES::encrypt(copia.getCorreo()));
+        copia.setCorreoHMAC(HMACsecurity::generate(copia.getCorreo()));
+    }
 
-    return repo.update(entity);
+    if (!copia.getContrasena().empty()) {
+        copia.setContrasena(hasher.hash(copia.getContrasena()));
+    }
+
+    return repo.update(copia);
 }
 
 bool AdminService::remove(int id) {
@@ -53,19 +61,20 @@ bool AdminService::remove(int id) {
     return repo.remove(id);
 }
 
-bool AdminService::login(const AdminModel& entity) {
+AdminModel AdminService::login(const AdminModel& entity) const{
     if (entity.getCorreo().empty()) 
         throw logic_error("El correo no puede estar vacio");
     
     if(entity.getContrasena().empty())
         throw logic_error("La contraseña no puede estar vacia");
 
-    AdminModel admin = repo.findByCorreoHMAC(AES::encrypt(entity.getCorreo()));
+    AdminModel admin = repo.findByCorreoHMAC(HMACsecurity::generate(entity.getCorreo()));
 
-    if (AES::decrypt(admin.getCorreo()) != entity.getCorreo())
-        return false;
+    if (AES::decrypt(admin.getCorreoAES()) != entity.getCorreo())
+        throw logic_error("Credencieles incorrectas");
 
-    return hasher.verificar(entity.getContrasena(), admin.getContrasena());
+    if (!hasher.verificar(entity.getContrasena(), admin.getContrasena()))
+        throw logic_error("Credencieles incorrectas");
         
-    
+    return admin;
 }

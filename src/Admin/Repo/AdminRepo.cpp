@@ -75,8 +75,8 @@ bool AdminRepo::update(const AdminModel& entity) {
     result r = txn.exec(R"sql(UPDATE admin SET
         nombre = CASE WHEN $1 <> '' THEN $1 ELSE nombre END,
         correo_aes = CASE WHEN $2 <> '' THEN $2 ELSE correo_aes END,
-        corrwo_hmac = CASE WHEN $3 <> '' THEN $3 ELSE correo_hmac END,
-        contrasena = CASE WHEN $4 <> '' THEN $3 ELSE contrasena END
+        correo_hmac = CASE WHEN $3 <> '' THEN $3 ELSE correo_hmac END,
+        contrasena = CASE WHEN $4 <> '' THEN $4 ELSE contrasena END
         WHERE adminid = $5)sql", 
     params{
         entity.getNombre(),     //param 1
@@ -113,11 +113,12 @@ AdminModel AdminRepo::findByCorreoHMAC (const string& correo) const {
         });
     
     if (r.empty()) 
-        throw logic_error("No existe un Admin con el id mencionado");
+        throw logic_error("Credenciales incorrectas");
 
     AdminModel admin(r[0]["nombre"].as<string>());
         admin.setId(r[0]["adminid"].as<int>());
         admin.setCorreoAES(r[0]["correo_aes"].as<string>());
+        admin.setCorreoHMAC(correo);
         admin.setContrasena(r[0]["contrasena"].as<string>());
     
     return admin;

@@ -29,26 +29,19 @@ string JWT::SECRET = [] {
 }();
 
 string JWT::generarToken(int adminId, const string& username){
-    try {
+    if (SECRET.empty()) 
+        throw runtime_error("No se encontro el JWT_KEY");
 
-        if (SECRET.empty()) 
-            throw runtime_error("No se encontro el JWT_KEY");
-
-        auto token = create()
+    auto token = create()
         .set_type("JWT")
-    .set_issuer("mi_api")
+        .set_issuer("mi_api")
         .set_payload_claim("adminId", claim(adminId))
         .set_payload_claim("username", claim(username))
         .set_payload_claim("role", claim(string("admin")))
         .set_issued_at(chrono::system_clock::now())
         .set_expires_at(chrono::system_clock::now() + chrono::hours(24))
         .sign(algorithm::hs256{SECRET});
-        return token;
-    
-    } catch (const exception& e) {
-        cout << "Error: " << e.what() << '\n' << endl;
-        return "";
-    }
+    return token;
 }
 
 JWT::TokenInfo JWT::validarToken(const string& token) {
