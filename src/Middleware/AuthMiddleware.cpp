@@ -21,7 +21,7 @@ void AuthMiddleware::before_handle(
         (path == "/api/registro/count" && req.method == HTTPMethod::GET) || //Ruta para contar los registros
         (path == "/api/alumno" && req.method == HTTPMethod::POST) ||    //Ruta para insertar alumnos
         (path == "/api/universidades" && req.method == HTTPMethod::GET) || //Ruta para listar las universidades
-        (path == "/api/login" && req.method == HTTPMethod::PUT) //Ruta para hacer el login
+        (path == "/api/admin/login" && req.method == HTTPMethod::PUT) //Ruta para hacer el login
         ) 
     {
         return;
