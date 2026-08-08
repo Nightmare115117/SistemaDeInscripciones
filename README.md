@@ -321,7 +321,7 @@ Esta configuración es útil durante el desarrollo.
 
 ## Modelo de la base de datos
 
-*Documentación del modelo de base de datos pendiente.*
+![Modelo de la base de datos](./assets/DBModel.png)
 
 ## Repositorios relacionados
 
@@ -624,7 +624,7 @@ This configuration is intended for development.
 
 ## Database Model
 
-*Database model documentation pending.*
+![Database model](./assets/database.png)
 
 ## Related Repositories
 
