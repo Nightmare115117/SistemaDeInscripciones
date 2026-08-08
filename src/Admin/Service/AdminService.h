@@ -18,7 +18,9 @@ public:
     int insert(const AdminModel& entity) override;
     bool update(const AdminModel& etity) override;
     bool remove(int id) override;
-
     bool validate(const AdminModel& entity) override;
-    bool login(const AdminModel& entity);
+
+    AdminModel login(const AdminModel& entity) const;
+
+ 
 };
