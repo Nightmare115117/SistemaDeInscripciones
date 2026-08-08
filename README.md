@@ -624,7 +624,7 @@ This configuration is intended for development.
 
 ## Database Model
 
-![Database model](./assets/database.png)
+![Database model](./assets/DBModel.png)
 
 ## Related Repositories
 
