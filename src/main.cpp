@@ -98,6 +98,7 @@ int main() {
     problemaController.registrarRutas(app, "/api/problematica");
     contactoController.registrarRutas(app, "/api/contactos-emergencia");
     adminController.registrarRutas(app, "/api/admin");
+    adminController.HacerInicioDeSesion(app, adminService);
     alumnoController.registrarRutas(app, "/api/alumno");
 
     // Ruta de prueba de conexión
