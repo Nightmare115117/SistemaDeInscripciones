@@ -47,14 +47,23 @@ int AlumnoService::insert(const AlumnoModel& entity) {
 
 bool AlumnoService::update(const AlumnoModel& entity) {
     if (entity.getId() <= 0) throw logic_error("El id debe ser positivo");
-    if (!validate(entity)) throw logic_error("Los datos del alumno no son válidos");
     if (entity.getIdEquipo() > 0) {
         int cantidad = repo.countByIdOrderByGroup(entity.getIdEquipo()).Cantidad;
         if (cantidad >= 6 || cantidad <= 2) 
             throw runtime_error("Error la cantidad de integrantes en el Equipo es mayor a 5 o es menor de 3");
     }
 
-    return repo.update(entity);
+    AlumnoModel copia = entity;
+    
+    if (!copia.getCorreo().empty()) {
+        copia.setCorreo(AES::encrypt(copia.getCorreo()));
+    }
+
+    if (!copia.getNumeroTel().empty()){
+        copia.setNumeroTel(AES::encrypt(copia.getNumeroTel()));
+    }
+
+    return repo.update(copia);
 }
 
 bool AlumnoService::remove(int id) {
