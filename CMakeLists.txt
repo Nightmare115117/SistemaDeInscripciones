@@ -16,7 +16,7 @@ set(JWT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(
     Crow
     GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
-    GIT_TAG master
+    GIT_TAG v1.3.3
 )
 
 FetchContent_MakeAvailable(Crow)
