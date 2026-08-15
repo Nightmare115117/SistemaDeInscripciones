@@ -83,6 +83,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(redis-plus-plus)
 
+target_link_libraries(redis++_static PUBLIC hiredis)
+
 if(TARGET redis++_static)
     target_compile_options(redis++_static PRIVATE -Wno-error=maybe-uninitialized)
 endif()
