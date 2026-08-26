@@ -72,9 +72,6 @@ void AuthMiddleware::before_handle(
     ctx.adminId = info.adminId;
     ctx.username = info.username;
     ctx.role = info.role;
-
-
-
 }
 
 void AuthMiddleware::after_handle(request& reg, response& res, context& ctx) {

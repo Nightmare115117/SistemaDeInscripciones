@@ -41,7 +41,7 @@ string JWT::generarToken(int adminId, const string& username){
         .set_issued_at(chrono::system_clock::now())
         .set_expires_at(chrono::system_clock::now() + chrono::hours(24))
         .sign(algorithm::hs256{SECRET});
-    return token;
+        return token;
 }
 
 JWT::TokenInfo JWT::validarToken(const string& token) {

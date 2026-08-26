@@ -1,11 +1,13 @@
 #include "AdminController.h"
 #include <stdexcept>
 
+using namespace crow;
+
 AdminController::AdminController(AdminService& service)
     : Controller<AdminModel, AdminService>(service) {}
 
-crow::json::wvalue AdminController::toJson(const AdminModel& entidad) const {
-    crow::json::wvalue json;
+json::wvalue AdminController::toJson(const AdminModel& entidad) const {
+    json::wvalue json;
     json["id"] = entidad.getId();
     json["nombre"] = entidad.getNombre();
     json["correo"] = entidad.getCorreo();
