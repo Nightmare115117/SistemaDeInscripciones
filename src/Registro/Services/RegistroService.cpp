@@ -1,6 +1,5 @@
 #include "RegistroService.h"
 #include <stdexcept>
-#include "Redis/RedisClient.h"
 
 using namespace std;
 
@@ -39,12 +38,7 @@ bool RegistroService::update(const RegistroModel& entity) {
 bool RegistroService::remove(int id) {
     if (id <= 0) throw logic_error("El id debe ser positivo");
 
-    bool eliminado = repo.remove(id);
-
-    if (eliminado)
-        RedisC::publish("actualizar", "Se elimino el registro con el id: " + to_string(id));
-
-    return eliminado;
+    return repo.remove(id);;
 }
 
 int RegistroService::countById() const {
