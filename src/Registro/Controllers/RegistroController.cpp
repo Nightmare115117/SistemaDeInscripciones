@@ -6,8 +6,8 @@
 using namespace std;
 using namespace crow;
 
-RegistroController::RegistroController(RegistroService& service)
-    : Controller<RegistroModel, RegistroService>(service) {}
+RegistroController::RegistroController(RegistroService& service, ProblemaRepository& problemRepository)
+    : Controller<RegistroModel, RegistroService>(service), problemaRepo(problemRepository) {}
 
     crow::json::wvalue RegistroController::toJson(const RegistroModel& entidad) const {
     crow::json::wvalue json;

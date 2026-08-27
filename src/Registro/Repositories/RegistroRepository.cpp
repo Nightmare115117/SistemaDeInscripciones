@@ -2,6 +2,7 @@
 #include <pqxx/pqxx>
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 using namespace pqxx;
@@ -81,4 +82,14 @@ int RegistroRepository::countById() const {
         cerr << "Error al contar registros: " << e.what() << endl;
     throw;
     }
+}
+
+RegistroRepository::CountDTO RegistroRepository::countStats() const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    auto row = txn.exec("SELECT count(*)::int, count(*) FILTER (WHERE e.estado = 'aceptado')::int, count(*) FILTER (WHERE e.estado = 'pendiente')::int, c.cupo, c.registro_abierto FROM registro r JOIN equipo e ON e.idequipo = r.idequipo CROSS JOIN evento_configuracion c WHERE c.id = 1").one_row();
+    int total = row[0].as<int>();
+    int aceptados = row[1].as<int>();
+    int cupo = row[3].as<int>();
+    return {total, aceptados, row[2].as<int>(), cupo, std::max(0, cupo - total), row[4].as<bool>()};
 }

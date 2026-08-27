@@ -1,10 +1,18 @@
 #include "RegistroService.h"
+#include "Security/Crypto.h"
 #include <stdexcept>
 
 using namespace std;
 
 RegistroService::RegistroService(RegistroRepository& repo)
     : Service<RegistroModel, RegistroRepository>(repo) {}
+
+RegistroService::RegistroService(RegistroRepository& registroRepo,
+                                                                 EquipoRepository& equipoRepo,
+                                                                 AlumnoRepository& alumnoRepo,
+                                                                 ContactoEmergenciaRepository& contactoRepo)
+        : Service<RegistroModel, RegistroRepository>(registroRepo),
+            equipoRepo(&equipoRepo), alumnoRepo(&alumnoRepo), contactoRepo(&contactoRepo) {}
 
 bool RegistroService::validate(const RegistroModel& entity) {
     if (entity.getIdEquipo() <= 0 && entity.getIdEquipo() != -1) return false;
@@ -43,4 +51,47 @@ bool RegistroService::remove(int id) {
 
 int RegistroService::countById() const {
     return repo.countById();
+}
+
+RegistroRepository::CountDTO RegistroService::countStats() const {
+    return repo.countStats();
+}
+
+int RegistroService::insertRegistroCompleto(const RegistroModel& regis, const AlumnoModel& alumno, const EquipoModel& equipo, const ContactoEmergenciaModel& contacto) {
+    return insertRegistroCompleto(regis, equipo, {alumno}, {contacto});
+}
+
+int RegistroService::insertRegistroCompleto(RegistroModel registro,
+                                            EquipoModel equipo,
+                                            vector<AlumnoModel> alumnos,
+                                            vector<ContactoEmergenciaModel> contactos) {
+    if (!equipoRepo || !alumnoRepo || !contactoRepo) {
+        throw logic_error("El servicio de registro no tiene sus repositorios relacionados");
+    }
+    if (alumnos.empty() || alumnos.size() != contactos.size()) {
+        throw invalid_argument("Cada integrante debe tener un contacto de emergencia");
+    }
+
+    int equipoId = equipoRepo->insert(equipo);
+    int liderId = -1;
+
+    for (size_t index = 0; index < alumnos.size(); ++index) {
+        int contactoId = contactoRepo->insert(contactos[index]);
+        alumnos[index].setIdEquipo(equipoId);
+        alumnos[index].setIdContacto(contactoId);
+
+        AlumnoModel alumno = alumnos[index];
+        alumno.setCorreo(AES::encrypt(alumno.getCorreo()));
+        alumno.setNumeroTel(AES::encrypt(alumno.getNumeroTel()));
+        int alumnoId = alumnoRepo->insert(alumno);
+        if (index == 0) liderId = alumnoId;
+    }
+
+    equipo.setId(equipoId);
+    equipo.setIdLider(liderId);
+    equipoRepo->update(equipo);
+
+    registro.setIdEquipo(equipoId);
+    insert(registro);
+    return equipoId;
 }
