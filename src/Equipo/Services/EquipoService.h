@@ -14,6 +14,7 @@ public:
     int insert(const EquipoModel& entity) override;
     bool update(const EquipoModel& entity) override;
     bool remove(int id) override;
+    bool updateReview(int id, const std::string& estado, const std::string& revisadoEn, const std::string& notas);
 
     bool validate(const EquipoModel& entity) override;
 };

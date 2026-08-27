@@ -14,16 +14,17 @@ void AuthMiddleware::before_handle(
 
     string path = req.url;
 
-    if (
-        (path == "/api/test-db") || //prueba para la Coneccion a la DB
-        (path == "/api/registros" && req.method == HTTPMethod::POST) || //Ruta insersion de Registros
-        (path == "/api/equipos" && req.method == HTTPMethod::POST) ||  //Ruta insersion de Equipos
-        (path == "/api/registro/count" && req.method == HTTPMethod::GET) || //Ruta para contar los registros
-        (path == "/api/alumno" && req.method == HTTPMethod::POST) ||    //Ruta para insertar alumnos
-        (path == "/api/universidades" && req.method == HTTPMethod::GET) || //Ruta para listar las universidades
-        (path == "/api/admin/login" && req.method == HTTPMethod::PUT) //Ruta para hacer el login
-        ) 
-    {
+    bool publicRoute = path == "/api/test-db" ||
+        (path == "/api/login" && req.method == HTTPMethod::POST) ||
+        (path == "/api/registro" && req.method == HTTPMethod::POST) ||
+        (path == "/api/registro/count" && req.method == HTTPMethod::GET) ||
+        (path == "/api/evento" && req.method == HTTPMethod::GET) ||
+        (path == "/api/agenda" && req.method == HTTPMethod::GET) ||
+        (path == "/api/patrocinadores" && req.method == HTTPMethod::GET) ||
+        (path == "/api/correos/estado" && req.method == HTTPMethod::GET) ||
+        (path == "/api/universidades" && req.method == HTTPMethod::GET);
+
+    if (publicRoute) {
         return;
     }
 
@@ -32,7 +33,8 @@ void AuthMiddleware::before_handle(
     if(auth.empty())
     {
         res.code = 401;
-        res.write("Falta Authorization");
+        res.set_header("Content-Type", "application/json");
+        res.write(R"({"detail":"Falta Authorization"})");
         res.end();
         return;
     }
@@ -40,7 +42,8 @@ void AuthMiddleware::before_handle(
     if(auth.find("Bearer ") != 0)
     {
         res.code = 401;
-        res.write("Formato incorrecto");
+        res.set_header("Content-Type", "application/json");
+        res.write(R"({"detail":"Formato incorrecto"})");
         res.end();
         return;
     }
@@ -52,7 +55,8 @@ void AuthMiddleware::before_handle(
     if(!info.valido)
     {
         res.code = 401;
-        res.write("JWT invalido");
+        res.set_header("Content-Type", "application/json");
+        res.write(R"({"detail":"Token invalido o expirado"})");
         res.end();
         return;
     }
@@ -64,7 +68,8 @@ void AuthMiddleware::before_handle(
         repo.findById(info.adminId);
     } catch (const exception& e) {
         res.code = 403;
-        res.write("Acceso Denegado");
+        res.set_header("Content-Type", "application/json");
+        res.write(R"({"detail":"Acceso denegado"})");
         res.end();
         return;
     }
@@ -72,6 +77,7 @@ void AuthMiddleware::before_handle(
     ctx.adminId = info.adminId;
     ctx.username = info.username;
     ctx.role = info.role;
+    ctx.authenticated = true;
 }
 
 void AuthMiddleware::after_handle(request& reg, response& res, context& ctx) {

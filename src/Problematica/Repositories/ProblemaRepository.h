@@ -13,6 +13,7 @@ public:
 
     std::vector<ProblemaModel> findAll() const override;
     ProblemaModel findById(int id) const override;
+    int findIdByCodigo(const std::string& codigo) const;
     int insert(const ProblemaModel& entity) override;
     bool update(const ProblemaModel& entity) override;
     bool remove(int id) override;

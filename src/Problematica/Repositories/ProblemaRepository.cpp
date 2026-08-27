@@ -16,7 +16,7 @@ vector<ProblemaModel> ProblemaRepository::findAll() const {
     vector<ProblemaModel> lista;
     for (const auto &fila : r) {
         ProblemaModel problema(fila["nombre"].as<string>(), fila["descripcion"].as<string>());
-        problema.setId(fila["idproblema"].as<int>());
+        problema.setId(fila["idproblematica"].as<int>());
         lista.push_back(problema);
     }
 
@@ -33,8 +33,16 @@ ProblemaModel ProblemaRepository::findById(int id) const {
     }
 
     ProblemaModel problema(r[0]["nombre"].as<string>(), r[0]["descripcion"].as<string>());
-    problema.setId(r[0]["idproblema"].as<int>());
+    problema.setId(r[0]["idproblematica"].as<int>());
     return problema;
+}
+
+int ProblemaRepository::findIdByCodigo(const string& codigo) const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec("SELECT idproblematica FROM problematica WHERE codigo = $1 OR idproblematica::text = $1 LIMIT 1", params{codigo});
+    if (r.empty()) throw logic_error("La problematica no existe");
+    return r[0]["idproblematica"].as<int>();
 }
 
 int ProblemaRepository::insert(const ProblemaModel& entity) {
@@ -42,7 +50,7 @@ int ProblemaRepository::insert(const ProblemaModel& entity) {
     work txn(conn);
     result r = txn.exec(R"sql(INSERT INTO problematica (nombre, descripcion)
         VALUES ($1, $2)
-        RETURNING idproblema)sql", params{
+        RETURNING idproblematica)sql", params{
         entity.getNombre(),
         entity.getDescripcion()
     });
@@ -57,7 +65,7 @@ bool ProblemaRepository::update(const ProblemaModel& entity) {
     result r = txn.exec(R"sql(UPDATE problematica SET
         nombre = CASE WHEN $1 <> '' THEN $1 ELSE nombre END,
         descripcion = CASE WHEN $2 <> '' THEN $2 ELSE descripcion END
-        WHERE idproblema = $3)sql", params{
+        WHERE idproblematica = $3)sql", params{
         entity.getNombre(),
         entity.getDescripcion(),
         entity.getId()

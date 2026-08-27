@@ -34,6 +34,19 @@
 #include "Registro/Services/RegistroService.h"
 #include "Registro/Controllers/RegistroController.h"
 
+#include "Evento/Repositories/EventoRepository.h"
+#include "Evento/Repositories/AgendaRepository.h"
+#include "Evento/Repositories/StaffRepository.h"
+#include "Evento/Repositories/PatrocinadorRepository.h"
+#include "Evento/Services/EventoService.h"
+#include "Evento/Services/AgendaService.h"
+#include "Evento/Services/StaffService.h"
+#include "Evento/Services/PatrocinadorService.h"
+#include "Evento/Controllers/EventoController.h"
+#include "Evento/Controllers/AgendaController.h"
+#include "Evento/Controllers/StaffController.h"
+#include "Evento/Controllers/PatrocinadorController.h"
+
 using namespace std;
 using namespace pqxx;
 
@@ -55,7 +68,7 @@ int main() {
     cors
         .global()
         .headers("Content-Type", "Authorization")
-        .methods("GET"_method, "POST"_method, "PUT"_method, "DELETE"_method)
+        .methods("GET"_method, "POST"_method, "PUT"_method, "PATCH"_method, "DELETE"_method)
         .origin("*");
 
     DBConfig config;
@@ -66,8 +79,6 @@ int main() {
     AlumnoController alumnoController(alumnoService);
 
     RegistroRepository registroRepo(config);
-    RegistroService registroService(registroRepo);
-    RegistroController registroController(registroService);
 
     EquipoRepository equipoRepo(config);
     EquipoService equipoService(equipoRepo);
@@ -85,6 +96,22 @@ int main() {
     ContactoEmergenciaService contactoService(contactoRepo);
     ContactoEmergenciaController contactoController(contactoService);
 
+    RegistroService registroService(registroRepo, equipoRepo, alumnoRepo, contactoRepo);
+    RegistroController registroController(registroService, problemaRepo);
+
+    EventoRepository eventoRepo(config);
+    EventoService eventoService(eventoRepo);
+    EventoController eventoController(eventoService);
+    AgendaRepository agendaRepo(config);
+    AgendaService agendaService(agendaRepo);
+    AgendaController agendaController(agendaService);
+    StaffRepository staffRepo(config);
+    StaffService staffService(staffRepo);
+    StaffController staffController(staffService);
+    PatrocinadorRepository patrocinadorRepo(config);
+    PatrocinadorService patrocinadorService(patrocinadorRepo);
+    PatrocinadorController patrocinadorController(patrocinadorService);
+
     PasswordHasher hasher = PasswordHasher(12);
 
     AdminRepo adminRepo(config);
@@ -93,13 +120,19 @@ int main() {
 
     registroController.registrarRutas(app, "/api/registros");
     registroController.contadorDeRegistros(app, registroService);
+    registroController.registroCompleto(app, registroService);
     equipoController.registrarRutas(app, "/api/equipos");
+    equipoController.rutasAdministrativas(app);
     universidadController.registrarRutas(app, "/api/universidades");
     problemaController.registrarRutas(app, "/api/problematica");
     contactoController.registrarRutas(app, "/api/contactos-emergencia");
-    adminController.registrarRutas(app, "/api/admin");
     adminController.HacerInicioDeSesion(app, adminService);
+    adminController.quienSoy(app, adminService);
     alumnoController.registrarRutas(app, "/api/alumno");
+    eventoController.registrarRutas(app);
+    agendaController.registrarRutas(app);
+    staffController.registrarRutas(app);
+    patrocinadorController.registrarRutas(app);
 
     // Ruta de prueba de conexión
     CROW_ROUTE(app, "/api/test-db")

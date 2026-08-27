@@ -37,3 +37,10 @@ bool EquipoService::remove(int id) {
     if (id <= 0) throw logic_error("El id debe ser positivo");
     return repo.remove(id);
 }
+
+bool EquipoService::updateReview(int id, const string& estado, const string& revisadoEn, const string& notas) {
+    if (id <= 0) throw logic_error("El id debe ser positivo");
+    if (!estado.empty() && estado != "pendiente" && estado != "aceptado" && estado != "rechazado")
+        throw logic_error("Estado de equipo invalido");
+    return repo.updateReview(id, estado, revisadoEn, notas);
+}

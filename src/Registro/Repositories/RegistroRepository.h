@@ -8,6 +8,7 @@ class RegistroRepository : public Repository <RegistroModel> {
     DBConfig& dbConfig;
 
 public:
+    struct CountDTO { int total; int aceptados; int pendientes; int cupo; int disponibles; bool abierto; };
 
     explicit RegistroRepository(DBConfig& dbConfig);
     
@@ -18,4 +19,5 @@ public:
     bool remove (int id) override;
 
     int countById() const;
+    CountDTO countStats() const;
 };
