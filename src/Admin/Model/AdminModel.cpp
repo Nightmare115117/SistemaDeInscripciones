@@ -7,7 +7,7 @@ AdminModel::AdminModel() : AdminModel("") {}
 AdminModel::AdminModel(const string& nombre):
     AdminModel(nombre, "", "") {}
 
-AdminModel::AdminModel(const string& nombre, const string& correo, const string& contrasena) : Entity(-1) {
+AdminModel::AdminModel(const string& nombre, const string& correo, const string& contrasena) : Entity<int>(-1) {
     this->nombre = nombre;
     this->correo = correo;
     this->contraseña = contrasena;

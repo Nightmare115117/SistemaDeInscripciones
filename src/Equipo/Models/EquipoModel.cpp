@@ -5,10 +5,10 @@ using namespace std;
 EquipoModel::EquipoModel() : EquipoModel("", -1, -1, -1) {}
 
 EquipoModel::EquipoModel(const string& nombre)
-    : Entity(0), nombre(nombre), idUniversidad(-1), idLider(-1), idProblematica(-1), estado("pendiente") {}
+    : Entity<int>(0), nombre(nombre), idUniversidad(-1), idLider(-1), idProblematica(-1), estado("pendiente") {}
 
 EquipoModel::EquipoModel(const string& nombre, int idUniversidad, int idLider, int idProblematica)
-    : Entity(0), nombre(nombre), idUniversidad(idUniversidad), idLider(idLider), idProblematica(idProblematica), estado("pendiente") {}
+    : Entity<int>(0), nombre(nombre), idUniversidad(idUniversidad), idLider(idLider), idProblematica(idProblematica), estado("pendiente") {}
 
 const string& EquipoModel::getNombre() const {
     return nombre;

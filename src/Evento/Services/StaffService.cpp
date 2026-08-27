@@ -2,7 +2,7 @@
 #include "Security/Crypto.h"
 #include <stdexcept>
 
-StaffService::StaffService(StaffRepository& repository) : repo(repository) {}
+StaffService::StaffService(StaffRepository& repository) : Service<StaffModel, StaffRepository, std::string>(repository) {}
 std::vector<StaffModel> StaffService::findAll() const {
     auto items = repo.findAll();
     for (auto& item : items) {
@@ -12,7 +12,15 @@ std::vector<StaffModel> StaffService::findAll() const {
     return items;
 }
 
-StaffModel StaffService::insert(const StaffModel& item) const {
+StaffModel StaffService::findById(const std::string& id) const {
+    validateId(id);
+    StaffModel item = repo.findById(id);
+    item.setCorreo(AES::decrypt(item.getCorreo()));
+    item.setTelefono(AES::decrypt(item.getTelefono()));
+    return item;
+}
+
+StaffModel StaffService::insert(const StaffModel& item) {
     validate(item);
     StaffModel encrypted = item;
     encrypted.setCorreo(AES::encrypt(encrypted.getCorreo()));
@@ -23,7 +31,8 @@ StaffModel StaffService::insert(const StaffModel& item) const {
     return saved;
 }
 
-StaffModel StaffService::update(const std::string& id, const StaffModel& item) const {
+bool StaffService::update(const StaffModel& item) { updateAndFetch(item.getId(), item); return true; }
+StaffModel StaffService::updateAndFetch(const std::string& id, const StaffModel& item) const {
     validateId(id);
     StaffModel encrypted = item;
     if (!encrypted.getCorreo().empty()) encrypted.setCorreo(AES::encrypt(encrypted.getCorreo()));
@@ -33,7 +42,7 @@ StaffModel StaffService::update(const std::string& id, const StaffModel& item) c
     saved.setTelefono(AES::decrypt(saved.getTelefono()));
     return saved;
 }
-bool StaffService::remove(const std::string& id) const { return repo.remove(id); }
+bool StaffService::remove(const std::string& id) { validateId(id); return repo.remove(id); }
 void StaffService::validate(const StaffModel& item) {
     if (item.getNombre().empty() || item.getRol().empty() || item.getCorreo().empty())
         throw std::invalid_argument("Staff requiere nombre, rol y correo");

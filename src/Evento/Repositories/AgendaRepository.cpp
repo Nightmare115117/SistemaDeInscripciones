@@ -29,7 +29,7 @@ vector<AgendaModel> AgendaRepository::findAll() const {
     return result;
 }
 
-AgendaModel AgendaRepository::insert(const AgendaModel& item) const {
+AgendaModel AgendaRepository::insert(const AgendaModel& item) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto row = txn.exec("INSERT INTO agenda (dia, inicio, fin, titulo, detalle, tipo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
@@ -53,7 +53,13 @@ AgendaModel AgendaRepository::update(const string& id, const AgendaModel& item) 
     return hydrate(id);
 }
 
-bool AgendaRepository::remove(const string& id) const {
+AgendaModel AgendaRepository::findById(const string& id) const { return hydrate(id); }
+bool AgendaRepository::update(const AgendaModel& item) {
+    update(item.getId(), item);
+    return true;
+}
+
+bool AgendaRepository::remove(const string& id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto result = txn.exec("DELETE FROM agenda WHERE id = $1", params{id});

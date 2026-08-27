@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "Generics/Entity.h"
 
 struct ProblematicaDTO {
 	std::string id;
@@ -9,7 +10,7 @@ struct ProblematicaDTO {
 	std::string description;
 };
 
-class EventoModel {
+class EventoModel : public Entity<int> {
 	int cupo = 60;
 	int minIntegrantes = 3;
 	int maxIntegrantes = 5;

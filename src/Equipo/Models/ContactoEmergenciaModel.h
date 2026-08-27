@@ -2,7 +2,7 @@
 #include <string>
 #include "Generics/Entity.h"
 
-class ContactoEmergenciaModel : public Entity {
+class ContactoEmergenciaModel : public Entity<int> {
 
     std::string nombre;
     std::string telefono;

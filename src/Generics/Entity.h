@@ -1,13 +1,14 @@
 #pragma once
 
+template <typename Id = int>
 class Entity {
 
-    int id;
+    Id id;
 
 public:
     virtual ~Entity() = default;
-    explicit Entity(int id);
-    int getId() const;
+    explicit Entity(Id id = Id{}) : id(id) {}
+    const Id& getId() const { return id; }
 
-    void setId(int id);
+    void setId(const Id& value) { id = value; }
 };

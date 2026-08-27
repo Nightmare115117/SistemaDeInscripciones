@@ -3,7 +3,7 @@
 #include <string>
 #include "Generics/Entity.h"
 
-class AdminModel : public Entity {
+class AdminModel : public Entity<int> {
 
     std::string nombre;
     std::string correo;

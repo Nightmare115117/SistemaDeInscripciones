@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
-class AgendaModel {
-	std::string id, dia, inicio, fin, titulo, detalle;
+#include "Generics/Entity.h"
+class AgendaModel : public Entity<std::string> {
+	std::string dia, inicio, fin, titulo, detalle;
 	std::string tipo = "service";
 	std::vector<std::string> responsables;
 public:

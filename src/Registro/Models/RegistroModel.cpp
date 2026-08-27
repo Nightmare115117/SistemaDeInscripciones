@@ -4,7 +4,7 @@ using namespace std;
 
 RegistroModel::RegistroModel() : RegistroModel(0){}
 
-RegistroModel::RegistroModel(int idEquipo) : Entity(0) {
+RegistroModel::RegistroModel(int idEquipo) : Entity<int>(0) {
     this->idEquipo = idEquipo;
 }
 

@@ -2,7 +2,7 @@
 #include "crow.h"
 #include <string>
 
-template <typename T, typename Service>
+template <typename T, typename Service, typename Id = int>
 class Controller {
 
 protected:
