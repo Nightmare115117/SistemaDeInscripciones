@@ -5,7 +5,7 @@ using namespace std;
 ProblemaModel::ProblemaModel() : ProblemaModel("", "") {}
 
 ProblemaModel::ProblemaModel(const string& nombre, const string& descripcion)
-    : Entity(0), nombre(nombre), descripcion(descripcion) {}
+    : Entity<int>(0), nombre(nombre), descripcion(descripcion) {}
 
 const string& ProblemaModel::getNombre() const {
     return nombre;

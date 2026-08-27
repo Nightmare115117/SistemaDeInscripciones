@@ -4,7 +4,7 @@ using namespace std;
 
 UniversityModel::UniversityModel() : UniversityModel("") {}
 
-UniversityModel::UniversityModel(const string& nombre) : Entity(0) {
+UniversityModel::UniversityModel(const string& nombre) : Entity<int>(0) {
     this->nombre = nombre;
 }
 

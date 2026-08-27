@@ -3,10 +3,10 @@
 using namespace std;
 
 ContactoEmergenciaModel::ContactoEmergenciaModel()
-    : Entity(0), nombre(""), telefono(""), pariente("") {}
+    : Entity<int>(0), nombre(""), telefono(""), pariente("") {}
 
 ContactoEmergenciaModel::ContactoEmergenciaModel(const string& nombre, const string& telefono, const string& pariente)
-    : Entity(0), nombre(nombre), telefono(telefono), pariente(pariente) {}
+    : Entity<int>(0), nombre(nombre), telefono(telefono), pariente(pariente) {}
 
 const string& ContactoEmergenciaModel::getNombre() const {
     return nombre;

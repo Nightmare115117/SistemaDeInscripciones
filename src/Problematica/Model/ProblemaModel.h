@@ -2,7 +2,7 @@
 #include <string>
 #include "Generics/Entity.h"
 
-class ProblemaModel : public Entity {
+class ProblemaModel : public Entity<int> {
 
     std::string nombre;
     std::string descripcion;

@@ -2,7 +2,7 @@
 #include "Generics/Entity.h"
 #include <string>
 
-class UniversityModel : public Entity {
+class UniversityModel : public Entity<int> {
 
     std::string nombre;
 

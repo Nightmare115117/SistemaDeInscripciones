@@ -20,7 +20,7 @@ vector<StaffModel> StaffRepository::findAll() const {
     return result;
 }
 
-StaffModel StaffRepository::insert(const StaffModel& item) const {
+StaffModel StaffRepository::insert(const StaffModel& item) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto row = txn.exec("INSERT INTO staff (nombre, rol, area, correo, telefono) VALUES ($1, $2, $3, $4, $5) RETURNING id, nombre, rol, area, correo, telefono", params{item.getNombre(), item.getRol(), item.getArea(), item.getCorreo(), item.getTelefono()}).one_row();
@@ -36,7 +36,16 @@ StaffModel StaffRepository::update(const string& id, const StaffModel& item) con
     return staffFromRow(row);
 }
 
-bool StaffRepository::remove(const string& id) const {
+StaffModel StaffRepository::findById(const string& id) const {
+    connection conn(dbConfig.obtenerDatabaseUrl()); nontransaction txn(conn);
+    return staffFromRow(txn.exec("SELECT id, nombre, rol, area, correo, telefono FROM staff WHERE id = $1", params{id}).one_row());
+}
+bool StaffRepository::update(const StaffModel& item) {
+    update(item.getId(), item);
+    return true;
+}
+
+bool StaffRepository::remove(const string& id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto result = txn.exec("DELETE FROM staff WHERE id = $1", params{id});

@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
-class PatrocinadorModel {
-	std::string id, nombre, logo, url;
+#include "Generics/Entity.h"
+class PatrocinadorModel : public Entity<std::string> {
+	std::string nombre, logo, url;
 	std::string nivel = "aliado";
 public:
 	const std::string& getId() const; const std::string& getNombre() const;

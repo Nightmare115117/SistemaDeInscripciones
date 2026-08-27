@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
-class StaffModel {
-	std::string id, nombre, rol, area, correo, telefono;
+#include "Generics/Entity.h"
+class StaffModel : public Entity<std::string> {
+	std::string nombre, rol, area, correo, telefono;
 public:
 	const std::string& getId() const; const std::string& getNombre() const;
 	const std::string& getRol() const; const std::string& getArea() const;

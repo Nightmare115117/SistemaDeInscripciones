@@ -20,12 +20,21 @@ vector<PatrocinadorModel> PatrocinadorRepository::findAll() const {
     return result;
 }
 
-PatrocinadorModel PatrocinadorRepository::insert(const PatrocinadorModel& item) const {
+PatrocinadorModel PatrocinadorRepository::insert(const PatrocinadorModel& item) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto row = txn.exec("INSERT INTO patrocinadores (nombre, logo, url, nivel) VALUES ($1, $2, $3, $4) RETURNING id, nombre, logo, url, nivel", params{item.getNombre(), item.getLogo(), item.getUrl(), item.getNivel()}).one_row();
     txn.commit();
     return sponsorFromRow(row);
+}
+
+PatrocinadorModel PatrocinadorRepository::findById(const string& id) const {
+    connection conn(dbConfig.obtenerDatabaseUrl()); nontransaction txn(conn);
+    return sponsorFromRow(txn.exec("SELECT id, nombre, logo, url, nivel FROM patrocinadores WHERE id = $1", params{id}).one_row());
+}
+bool PatrocinadorRepository::update(const PatrocinadorModel& item) {
+    update(item.getId(), item);
+    return true;
 }
 
 PatrocinadorModel PatrocinadorRepository::update(const string& id, const PatrocinadorModel& item) const {
@@ -36,7 +45,7 @@ PatrocinadorModel PatrocinadorRepository::update(const string& id, const Patroci
     return sponsorFromRow(row);
 }
 
-bool PatrocinadorRepository::remove(const string& id) const {
+bool PatrocinadorRepository::remove(const string& id) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
     auto result = txn.exec("DELETE FROM patrocinadores WHERE id = $1", params{id});

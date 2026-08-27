@@ -2,7 +2,7 @@
 #include <string>
 #include "Generics/Entity.h"
 
-class RegistroModel : public Entity {
+class RegistroModel : public Entity<int> {
 
     int idEquipo;
     std::string fecha_hora;

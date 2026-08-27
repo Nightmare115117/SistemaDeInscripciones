@@ -11,7 +11,7 @@ AlumnoModel::AlumnoModel(const string& nombre) :Entity(0) {
 AlumnoModel::AlumnoModel(const string& nombre, int idEquipo, bool firmo,
 const string& correo, const string& numeroTel, const string& apellidoPaterno,
 const string& apellidoMaterno, const string& alergias,
-const string& condicionMedica, const string& medicamento, int idContacto, int idUniversidad) : Entity(0) {
+const string& condicionMedica, const string& medicamento, int idContacto, int idUniversidad) : Entity<int>(0) {
     this->nombre = nombre;
     this->idEquipo = idEquipo;
     this->firmoTerminos = firmo;
