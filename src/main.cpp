@@ -117,21 +117,32 @@ int main() {
     AdminRepo adminRepo(config);
     AdminService adminService(adminRepo, hasher);
     AdminController adminController(adminService);
-    
+
     registroController.registrarRutas(app, "/api/registros");
     registroController.contadorDeRegistros(app, registroService);
     registroController.registroCompleto(app, registroService);
+
     equipoController.registrarRutas(app, "/api/equipos");
     equipoController.rutasAdministrativas(app);
+
     universidadController.registrarRutas(app, "/api/universidades");
+
     problemaController.registrarRutas(app, "/api/problematica");
+
     contactoController.registrarRutas(app, "/api/contactos-emergencia");
+
     adminController.HacerInicioDeSesion(app, adminService);
+
     adminController.quienSoy(app, adminService);
+
     alumnoController.registrarRutas(app, "/api/alumno");
+
     eventoController.registrarRutas(app);
+
     agendaController.registrarRutas(app);
+
     staffController.registrarRutas(app);
+    
     patrocinadorController.registrarRutas(app);
 
     // Ruta de prueba de conexión
