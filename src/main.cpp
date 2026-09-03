@@ -117,7 +117,7 @@ int main() {
     AdminRepo adminRepo(config);
     AdminService adminService(adminRepo, hasher);
     AdminController adminController(adminService);
-
+    //
     registroController.registrarRutas(app, "/api/registros");
     registroController.contadorDeRegistros(app, registroService);
     registroController.registroCompleto(app, registroService);
