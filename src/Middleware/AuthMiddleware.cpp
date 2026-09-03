@@ -22,7 +22,7 @@ void AuthMiddleware::before_handle(
         (path == "/api/agenda" && req.method == HTTPMethod::GET) ||
         (path == "/api/patrocinadores" && req.method == HTTPMethod::GET) ||
         (path == "/api/correos/estado" && req.method == HTTPMethod::GET) ||
-        (path == "/api/universidades" && req.method == HTTPMethod::GET);
+        (path == "/api/universidades" && req.method == HTTPMethod::GET);//
 
     if (publicRoute) {
         return;
