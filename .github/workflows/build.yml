@@ -52,20 +52,20 @@ jobs:
         with:
           authkey: ${{ secrets.TS_AUTH_KEY }}
 
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy a k3s
         env:
           SERVER_IP: ${{ vars.SSH_SERVER_IP }}
           SERVER_USER: ${{ vars.SSH_USER }}
-          SSH_PASSWORD: ${{ secrets.SSH_USER_PASSWORD }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-
-          sshpass -p "$SSH_PASSWORD" ssh \
+          ssh \
             -o StrictHostKeyChecking=no \
             "$SERVER_USER@$SERVER_IP" \
-            "sudo k3s kubectl apply -f /kubernetes/mi_api.yaml && \
-             sudo k3s kubectl set image deployment/mi-api \
-             mi-api=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mi-api:latest && \
-             sudo k3s kubectl rollout restart deployment/mi-api && \
-             sudo k3s kubectl rollout status deployment/mi-api --timeout=120s"
+            "kubectl apply -f /kubernetes/mi_api.yaml && \
+            kubectl set image deployment/mi-api \
+            mi-api=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mi-api:latest && \
+            kubectl rollout status deployment/mi-api --timeout=120s"

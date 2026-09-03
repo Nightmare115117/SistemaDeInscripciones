@@ -9,7 +9,7 @@ using namespace crow;
 void AuthMiddleware::before_handle(
     request& req,
     response& res,
-    context& ctx)
+    context& ctx)//
 {
 
     string path = req.url;
