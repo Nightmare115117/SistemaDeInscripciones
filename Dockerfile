@@ -3,6 +3,7 @@ FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y \
     build-essential cmake git \
     libboost-all-dev libssl-dev libasio-dev libpq-dev \
+    libcurl4-openssl-dev \
     pkg-config\
     && rm -rf /var/lib/apt/lists/*
 

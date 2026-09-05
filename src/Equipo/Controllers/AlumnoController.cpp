@@ -19,6 +19,8 @@ crow::json::wvalue AlumnoController::toJson(const AlumnoModel& entidad) const {
     json["medicamento"] = entidad.getMedicamento();
     json["idContacto"] = entidad.getIdContacto();
     json["idUniversidad"] = entidad.getIdUniversidad();
+    json["nivel_estudio"] = entidad.getNivelEstudio();
+    json["idPais"] = entidad.getIdPais();
     return json;
 }
 
@@ -76,6 +78,10 @@ AlumnoModel AlumnoController::fromJson(const crow::json::rvalue& json) const {
     }
 
     alumno.setIdContacto(json.has("idContacto") ? json["idContacto"].i() : -1);
+
+    alumno.setIdUniversidad(json.has("idUniversidad") ? json["idUniversidad"].i() : -1);
+    alumno.setNivelEstudio(json.has("nivel_estudio") ? json["nivel_estudio"].i() : -1);
+    alumno.setNivelEstudio(json.has("idPais") ? json["idPais"].i() : -1);
 
     return alumno;
 }

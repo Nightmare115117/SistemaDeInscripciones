@@ -2,7 +2,7 @@
 
 class HMACsecurity {
 
-    static std::string HMAC_KEY;
+    static const std::string HMAC_KEY;
     static std::string ByteToHex(std::vector<unsigned char> entrada);
 
 public:
