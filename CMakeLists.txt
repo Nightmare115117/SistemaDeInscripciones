@@ -49,6 +49,8 @@ FetchContent_MakeAvailable(bcrypt)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(CURL REQUIRED)
+
 pkg_check_modules(PQXX REQUIRED libpqxx)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/DBConfig/*.cpp")
@@ -67,4 +69,5 @@ ${PQXX_LIBRARIES} pq
 jwt-cpp::jwt-cpp
 OpenSSL::Crypto
 nlohmann_json::nlohmann_json
-bcrypt)
+bcrypt
+CURL::libcurl)

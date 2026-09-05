@@ -4,7 +4,7 @@
 
 class AES {
 
-    static std::string KEY;
+    static const std::string KEY;
 
 public:
 

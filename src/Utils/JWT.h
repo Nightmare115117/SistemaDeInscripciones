@@ -5,7 +5,7 @@
 
 class JWT {
 
-    static std::string SECRET;
+    static const std::string SECRET;
 
 public:
 

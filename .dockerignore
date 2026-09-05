@@ -4,3 +4,5 @@ build/
 *.md
 .env
 /build/.env
+kubernetes/
+temp/

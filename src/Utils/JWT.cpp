@@ -13,7 +13,7 @@ using JWTBuilder = jwt::builder<jwt::default_clock, jwt::traits::nlohmann_json>;
 using JWTDecoded = jwt::decoded_jwt<jwt::traits::nlohmann_json>;
 using JWTVerifier = jwt::verifier<jwt::default_clock, jwt::traits::nlohmann_json>;
 
-string JWT::SECRET = [] {
+const string JWT::SECRET = [] {
     const char* envSecret = getenv("JWT_SECRET");
 
     if (!envSecret || string(envSecret).empty())

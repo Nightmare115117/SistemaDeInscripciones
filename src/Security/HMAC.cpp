@@ -8,7 +8,7 @@
 
 using namespace std;
 
-string HMACsecurity::HMAC_KEY = [] {
+const string HMACsecurity::HMAC_KEY = [] {
     const char* envSecret = getenv("HMAC_KEY");
 
     if (!envSecret || string(envSecret).empty())

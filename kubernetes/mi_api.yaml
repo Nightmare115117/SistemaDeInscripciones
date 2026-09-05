@@ -7,6 +7,7 @@ spec:
   selector:
     matchLabels:
       app: mi-api
+
   template:
     metadata:
       labels:
@@ -18,6 +19,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: mi-api-secrets
 
 ---
 apiVersion: v1

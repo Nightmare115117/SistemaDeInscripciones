@@ -10,7 +10,7 @@
 
 using namespace std;
 
-string AES::KEY = [] {
+const string AES::KEY = [] {
     const char* envSecret = getenv("AES_KEY");
 
     if (!envSecret || string(envSecret).empty())
