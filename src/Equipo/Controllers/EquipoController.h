@@ -2,12 +2,19 @@
 #include "Generics/Controller.h"
 #include "Equipo/Models/EquipoModel.h"
 #include "Equipo/Services/EquipoService.h"
+#include "Equipo/Repositories/AlumnoRepository.h"
+#include "Equipo/Repositories/ContactoEmergenciaRepository.h"
+#include "Problematica/Repositories/ProblemaRepository.h"
 #include <stdexcept>
 
 class EquipoController : public Controller<EquipoModel, EquipoService> {
+    AlumnoRepository& alumnoRepo;
+    ContactoEmergenciaRepository& contactoRepo;
+    ProblemaRepository& problemaRepo;
 
 public:
-    explicit EquipoController(EquipoService& service);
+    EquipoController(EquipoService& service, AlumnoRepository& alumnos,
+        ContactoEmergenciaRepository& contactos, ProblemaRepository& problemas);
 
     crow::json::wvalue toJson(const EquipoModel& entidad) const override;
     EquipoModel fromJson(const crow::json::rvalue& json) const override;

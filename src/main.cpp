@@ -27,6 +27,14 @@
 #include "Universidad/Services/UniversityService.h"
 #include "Universidad/Controllers/UniversidadController.h"
 
+#include "Pais/Repositories/PaisRepository.h"
+#include "Pais/Services/PaisService.h"
+#include "Pais/Controllers/PaisController.h"
+
+#include "NivelEstudio/Repositories/NivelEstudioRepository.h"
+#include "NivelEstudio/Services/NivelEstudioService.h"
+#include "NivelEstudio/Controllers/NivelEstudioController.h"
+
 #include "Problematica/Repositories/ProblemaRepository.h"
 #include "Problematica/Service/ProblemaService.h"
 #include "Problematica/Controller/ProblemaController.h"
@@ -83,11 +91,18 @@ int main() {
 
     EquipoRepository equipoRepo(config);
     EquipoService equipoService(equipoRepo);
-    EquipoController equipoController(equipoService);
 
     UniversityRepository universityRepo(config);
     UniversityService universityService(universityRepo);
     UniversidadController universidadController(universityService);
+
+    PaisRepository paisRepo(config);
+    PaisService paisService(paisRepo);
+    PaisController paisController(paisService);
+
+    NivelEstudioRepository nivelEstudioRepo(config);
+    NivelEstudioService nivelEstudioService(nivelEstudioRepo);
+    NivelEstudioController nivelEstudioController(nivelEstudioService);
 
     ProblemaRepository problemaRepo(config);
     ProblemaService problemaService(problemaRepo);
@@ -96,6 +111,8 @@ int main() {
     ContactoEmergenciaRepository contactoRepo(config);
     ContactoEmergenciaService contactoService(contactoRepo);
     ContactoEmergenciaController contactoController(contactoService);
+
+    EquipoController equipoController(equipoService, alumnoRepo, contactoRepo, problemaRepo);
 
     RegistroService registroService(registroRepo, equipoRepo, alumnoRepo, contactoRepo);
     RegistroController registroController(registroService, problemaRepo);
@@ -127,6 +144,10 @@ int main() {
     equipoController.rutasAdministrativas(app);
 
     universidadController.registrarRutas(app, "/api/universidades");
+
+    paisController.registrarRutas(app, "/api/paises");
+
+    nivelEstudioController.registrarRutas(app, "/api/niveles-estudio");
 
     problemaController.registrarRutas(app, "/api/problematica");
 
