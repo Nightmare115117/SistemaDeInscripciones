@@ -1,6 +1,7 @@
 #include "AlumnoService.h"
 #include "Security/Crypto.h"
 #include <stdexcept>
+#include "Utils/Cache.tpp"
 
 using namespace std;
 
@@ -16,10 +17,36 @@ bool AlumnoService::validate(const AlumnoModel& entity) {
 
 vector<AlumnoModel> AlumnoService::findAll() const {
     vector<AlumnoModel> decode;
-    for (AlumnoModel entity : repo.findAll()) {
-        entity.setCorreo(AES::decrypt(entity.getCorreo()));
-        entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
-        decode.push_back(entity);
+    try {
+        if (!Cache<AlumnoModel>::exist("ListaAlumnos.json")) {
+            for (AlumnoModel entity : repo.findAll()) {
+                entity.setCorreo(AES::decrypt(entity.getCorreo()));
+                entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
+                decode.push_back(entity);
+            }
+            Cache<AlumnoModel>::set("ListaAlumnos.json", repo.findAll());
+        } else {
+            if (Cache<AlumnoModel>::isValid("ListaAlumnos.json")) {
+                for (AlumnoModel entity : Cache<AlumnoModel>::get("ListaAlumnos.json")) {
+                entity.setCorreo(AES::decrypt(entity.getCorreo()));
+                entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
+                decode.push_back(entity);
+                }
+            } else {
+                for (AlumnoModel entity : repo.findAll()) {
+                entity.setCorreo(AES::decrypt(entity.getCorreo()));
+                entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
+                decode.push_back(entity);
+                }
+                Cache<AlumnoModel>::set("ListaAlumnos.json", repo.findAll());
+            }
+        }
+    } catch (const runtime_error& e) {
+        for (AlumnoModel entity : repo.findAll()) {
+            entity.setCorreo(AES::decrypt(entity.getCorreo()));
+            entity.setNumeroTel(AES::decrypt(entity.getNumeroTel()));
+            decode.push_back(entity);
+        }
     }
     return decode;
 }

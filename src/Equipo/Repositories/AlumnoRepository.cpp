@@ -185,7 +185,7 @@ AlumnoRepository::EquipoCantidadDTO AlumnoRepository::countByIdOrderByGroup(int 
         ));
 
     if (r.empty()) {
-        throw runtime_error("Error, id de equipo no encontrado o inexistente");
+        throw logic_error("Error, id de equipo no encontrado o inexistente");
     }
 
     AlumnoRepository::EquipoCantidadDTO temp;

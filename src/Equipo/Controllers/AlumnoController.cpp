@@ -81,7 +81,7 @@ AlumnoModel AlumnoController::fromJson(const crow::json::rvalue& json) const {
 
     alumno.setIdUniversidad(json.has("idUniversidad") ? json["idUniversidad"].i() : -1);
     alumno.setNivelEstudio(json.has("nivel_estudio") ? json["nivel_estudio"].i() : -1);
-    alumno.setNivelEstudio(json.has("idPais") ? json["idPais"].i() : -1);
+    alumno.setIdPais(json.has("idPais") ? json["idPais"].i() : -1);
 
     return alumno;
 }
