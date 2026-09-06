@@ -12,6 +12,7 @@ public:
     explicit AlumnoRepository(DBConfig& dbConfig);
 
     std::vector<AlumnoModel> findAll() const override;
+    std::vector<AlumnoModel> findByEquipoId(int equipoId) const;
     AlumnoModel findById (int id) const override;
     int insert (const AlumnoModel& entity) override;
     bool update (const AlumnoModel& entity) override;

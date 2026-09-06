@@ -21,7 +21,6 @@ void AuthMiddleware::before_handle(
         (path == "/api/evento" && req.method == HTTPMethod::GET) ||
         (path == "/api/agenda" && req.method == HTTPMethod::GET) ||
         (path == "/api/patrocinadores" && req.method == HTTPMethod::GET) ||
-        (path == "/api/correos/estado" && req.method == HTTPMethod::GET) ||
         (path == "/api/universidades" && req.method == HTTPMethod::GET) ||
         (path == "/test/email" && req.method == HTTPMethod::POST);
 

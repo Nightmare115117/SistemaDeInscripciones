@@ -267,36 +267,43 @@ El cache de BuildKit permite reutilizar capas que no hayan cambiado, incluyendo 
 
 ## Endpoints
 
-### CRUD
+Todas las rutas usan el prefijo `/api` y el servidor escucha en `http://localhost:8080`.
 
-Cada módulo expone las siguientes operaciones:
+### Rutas públicas
 
-| Método | Ruta                    | Descripción                |
-| ------ | ----------------------- | -------------------------- |
-| GET    | `/basePath`             | Listar todos los registros |
-| GET    | `/basePath/<id>`        | Obtener un registro por ID |
-| POST   | `/basePath/insert`      | Crear un nuevo registro    |
-| PUT    | `/basePath/update/<id>` | Actualizar un registro     |
-| DELETE | `/basePath/remove/<id>` | Eliminar un registro       |
+| Método | Ruta | Descripción |
+| ------ | ---- | ----------- |
+| POST | `/api/login` | Inicio de sesión; devuelve un JWT |
+| GET | `/api/evento` | Configuración pública y problemáticas |
+| GET | `/api/agenda` | Agenda del evento |
+| GET | `/api/patrocinadores` | Patrocinadores públicos |
+| GET | `/api/registro/count` | Conteo, cupo y disponibilidad |
+| POST | `/api/registro` | Registro de un equipo |
 
-### Módulos
+### Rutas protegidas
 
-| Módulo                  | Base path                   |
-| ----------------------- | --------------------------- |
-| Registros               | `/api/registros`            |
-| Equipos                 | `/api/equipos`              |
-| Universidades           | `/api/universidades`        |
-| Problemáticas           | `/api/problematica`         |
-| Contactos de emergencia | `/api/contactos-emergencia` |
+Todas las rutas siguientes requieren un JWT, salvo `/api/login`:
 
-### Administración
+| Método | Ruta | Descripción |
+| ------ | ---- | ----------- |
+| GET | `/api/yo` | Datos del administrador autenticado |
+| GET/POST | `/api/paises[/insert]` | Consultar y crear países |
+| GET | `/api/paises/<id>` | Obtener un país |
+| PUT | `/api/paises/update/<id>` | Actualizar un país |
+| DELETE | `/api/paises/remove/<id>` | Eliminar un país |
+| GET/POST | `/api/niveles-estudio[/insert]` | Consultar y crear niveles de estudio |
+| GET | `/api/niveles-estudio/<id>` | Obtener un nivel de estudio |
+| PUT | `/api/niveles-estudio/update/<id>` | Actualizar un nivel de estudio |
+| DELETE | `/api/niveles-estudio/remove/<id>` | Eliminar un nivel de estudio |
+| GET | `/api/equipos` | Listado de equipos con integrantes |
+| PATCH | `/api/equipos/<id>` | Aceptar, rechazar o anotar un equipo |
+| POST/PATCH/DELETE | `/api/agenda[/<id>]` | Administrar la agenda |
+| GET/POST/PATCH/DELETE | `/api/staff[/<id>]` | Administrar staff |
+| POST/PATCH/DELETE | `/api/patrocinadores[/<id>]` | Administrar patrocinadores |
+| PATCH | `/api/evento` | Actualizar la configuración del evento |
+| GET | `/api/correos/estado` | Consultar la configuración de correo |
 
-| Método         | Ruta               | Descripción                       | Autenticación |
-| -------------- | ------------------ | --------------------------------- | ------------- |
-| PUT            | `/api/admin/login` | Inicio de sesión de administrador | No            |
-| GET/PUT/DELETE | `/api/admin/...`   | Operaciones administrativas       | JWT           |
-
-> Los endpoints administrativos protegidos requieren un JWT mediante el header `Authorization`.
+Los endpoints protegidos requieren el header `Authorization`:
 
 Ejemplo:
 
@@ -308,8 +315,8 @@ Authorization: Bearer <JWT>
 
 | Método | Ruta                  | Descripción                             |
 | ------ | --------------------- | --------------------------------------- |
-| GET    | `/api/registro/count` | Total de registros                      |
-| GET    | `/api/test-db`        | Verifica la conexión a la base de datos |
+| GET    | `/api/health`         | Verifica la conexión a la base de datos |
+| POST   | `/test/email`         | Prueba el envío de correo               |
 
 ## CORS
 
@@ -572,36 +579,43 @@ BuildKit caching allows unchanged Docker layers to be reused between builds, inc
 
 ## Endpoints
 
-### CRUD
+All routes use the `/api` prefix and the server listens on `http://localhost:8080`.
 
-Each module exposes:
+### Public routes
 
-| Method | Route                   | Description         |
-| ------ | ----------------------- | ------------------- |
-| GET    | `/basePath`             | List all records    |
-| GET    | `/basePath/<id>`        | Get a record by ID  |
-| POST   | `/basePath/insert`      | Create a new record |
-| PUT    | `/basePath/update/<id>` | Update a record     |
-| DELETE | `/basePath/remove/<id>` | Delete a record     |
+| Method | Route | Description |
+| ------ | ----- | ----------- |
+| POST | `/api/login` | Administrator login; returns a JWT |
+| GET | `/api/evento` | Public event configuration and challenges |
+| GET | `/api/agenda` | Event agenda |
+| GET | `/api/patrocinadores` | Public sponsors |
+| GET | `/api/registro/count` | Registration count and availability |
+| POST | `/api/registro` | Register a team |
 
-### Modules
+### Protected routes
 
-| Module             | Base path                   |
-| ------------------ | --------------------------- |
-| Records            | `/api/registros`            |
-| Teams              | `/api/equipos`              |
-| Universities       | `/api/universidades`        |
-| Challenge tracks   | `/api/problematica`         |
-| Emergency contacts | `/api/contactos-emergencia` |
+All of the following routes require a JWT, except `/api/login`:
 
-### Administration
+| Method | Route | Description |
+| ------ | ----- | ----------- |
+| GET | `/api/yo` | Authenticated administrator data |
+| GET/POST | `/api/paises[/insert]` | List and create countries |
+| GET | `/api/paises/<id>` | Get a country |
+| PUT | `/api/paises/update/<id>` | Update a country |
+| DELETE | `/api/paises/remove/<id>` | Delete a country |
+| GET/POST | `/api/niveles-estudio[/insert]` | List and create study levels |
+| GET | `/api/niveles-estudio/<id>` | Get a study level |
+| PUT | `/api/niveles-estudio/update/<id>` | Update a study level |
+| DELETE | `/api/niveles-estudio/remove/<id>` | Delete a study level |
+| GET | `/api/equipos` | Teams with their members |
+| PATCH | `/api/equipos/<id>` | Accept, reject, or annotate a team |
+| POST/PATCH/DELETE | `/api/agenda[/<id>]` | Manage the agenda |
+| GET/POST/PATCH/DELETE | `/api/staff[/<id>]` | Manage staff |
+| POST/PATCH/DELETE | `/api/patrocinadores[/<id>]` | Manage sponsors |
+| PATCH | `/api/evento` | Update event configuration |
+| GET | `/api/correos/estado` | Read email configuration status |
 
-| Method         | Route              | Description               | Authentication |
-| -------------- | ------------------ | ------------------------- | -------------- |
-| PUT            | `/api/admin/login` | Administrator login       | No             |
-| GET/PUT/DELETE | `/api/admin/...`   | Administrative operations | JWT            |
-
-Protected administrative endpoints require:
+Protected endpoints require the `Authorization` header:
 
 ```http
 Authorization: Bearer <JWT>
@@ -611,8 +625,8 @@ Authorization: Bearer <JWT>
 
 | Method | Route                 | Description                    |
 | ------ | --------------------- | ------------------------------ |
-| GET    | `/api/registro/count` | Total number of records        |
-| GET    | `/api/test-db`        | Verifies database connectivity |
+| GET    | `/api/health`         | Verifies database connectivity |
+| POST   | `/test/email`         | Tests email delivery            |
 
 ## CORS
 

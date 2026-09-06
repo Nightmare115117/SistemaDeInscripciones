@@ -37,6 +37,14 @@ ProblemaModel ProblemaRepository::findById(int id) const {
     return problema;
 }
 
+string ProblemaRepository::findCodigoById(int id) const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec("SELECT coalesce(codigo, idproblematica::text) AS codigo FROM problematica WHERE idproblematica = $1", params{id});
+    if (r.empty()) throw logic_error("No existe una problematica con el id mencionado");
+    return r[0]["codigo"].as<string>();
+}
+
 int ProblemaRepository::findIdByCodigo(const string& codigo) const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);

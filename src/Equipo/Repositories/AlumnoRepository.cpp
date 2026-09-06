@@ -88,6 +88,35 @@ AlumnoModel AlumnoRepository::findById(int id) const{
     return alumno;
 }
 
+vector<AlumnoModel> AlumnoRepository::findByEquipoId(int equipoId) const {
+    connection conn(dbConfig.obtenerDatabaseUrl());
+    nontransaction txn(conn);
+    result r = txn.exec(R"sql(SELECT
+        idalumno, nombre, idequipo, firmoterminos, correo, numerotel,
+        apellidopaterno, apellidomaterno, alergias, condicion, medicamento,
+        idcontacto, iduniversidad
+    FROM alumnos WHERE idequipo = $1 ORDER BY idalumno)sql", params{equipoId});
+
+    vector<AlumnoModel> lista;
+    for (const auto& fila : r) {
+        AlumnoModel alumno(fila["nombre"].as<string>());
+        alumno.setId(fila["idalumno"].as<int>());
+        alumno.setIdEquipo(fila["idequipo"].as<int>());
+        alumno.setFirmoTerminos(fila["firmoterminos"].as<bool>());
+        alumno.setCorreo(fila["correo"].as<string>());
+        alumno.setNumeroTel(fila["numerotel"].as<string>());
+        alumno.setApellidoPaterno(fila["apellidopaterno"].as<string>());
+        alumno.setApellidoMaterno(fila["apellidomaterno"].as<string>());
+        alumno.setAlergias(fila["alergias"].as<string>());
+        alumno.setCondicionMedica(fila["condicion"].as<string>());
+        alumno.setMedicamento(fila["medicamento"].as<string>());
+        alumno.setIdContacto(fila["idcontacto"].as<int>());
+        alumno.setIdUniversidad(fila["iduniversidad"].as<int>());
+        lista.push_back(alumno);
+    }
+    return lista;
+}
+
 int AlumnoRepository::insert(const AlumnoModel& entity) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
