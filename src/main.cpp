@@ -5,6 +5,7 @@
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
+#include "Email/EmailService.h"
 
 #include "Admin/Repo/AdminRepo.h"
 #include "Admin/Service/AdminService.h"
@@ -146,7 +147,7 @@ int main() {
     patrocinadorController.registrarRutas(app);
 
     // Ruta de prueba de conexión
-    CROW_ROUTE(app, "/api/test-db")
+    CROW_ROUTE(app, "/api/health")
     ([databaseUrl](){
         try {
             pqxx::connection conn(databaseUrl);
@@ -162,6 +163,38 @@ int main() {
             crow::json::wvalue res;
             res["status"] = "error";
             res["mensaje"] = e.what();
+            return crow::response(500, res);
+        }
+    });
+
+    CROW_ROUTE(app, "/test/email").methods(crow::HTTPMethod::POST)
+    ([](const crow::request& req) {
+        try {
+            auto body = crow::json::load(req.body);
+            if (!body) {
+                crow::json::wvalue res;
+                res["error"] = "JSON inválido";
+                return crow::response(400, res);
+            }
+
+            string to = body["to"].s();
+            string subject = body["subject"].s();
+            string cuerpo = body["text"].s();
+
+            bool result = EmailService::sendEmail(to, subject, cuerpo);
+
+            if (result) {
+               crow::json::wvalue res;
+                res["Exito"] = "Correo enviado Exitosamente";
+                return crow::response(200, res); 
+            } else {
+                crow::json::wvalue res;
+                res["error"] = "Error inesperado, intente de nuevo";
+                return crow::response(500, res);
+            }
+        } catch (const exception& e) {
+            crow::json::wvalue res;
+            res["error"] = "JSON inválido";
             return crow::response(500, res);
         }
     });
