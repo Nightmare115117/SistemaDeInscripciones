@@ -71,3 +71,16 @@ OpenSSL::Crypto
 nlohmann_json::nlohmann_json
 bcrypt
 CURL::libcurl)
+
+include(CTest)
+
+if(BUILD_TESTING)
+    add_executable(turnstile_validator_tests
+        tests/TurnstileValidatorTests.cpp
+        src/Security/TurnstileValidator.cpp)
+    target_include_directories(turnstile_validator_tests PRIVATE src)
+    target_link_libraries(turnstile_validator_tests PRIVATE
+        nlohmann_json::nlohmann_json
+        CURL::libcurl)
+    add_test(NAME turnstile_validator_tests COMMAND turnstile_validator_tests)
+endif()

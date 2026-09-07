@@ -42,6 +42,7 @@
 #include "Registro/Repositories/RegistroRepository.h"
 #include "Registro/Services/RegistroService.h"
 #include "Registro/Controllers/RegistroController.h"
+#include "Security/TurnstileValidator.h"
 
 #include "Evento/Repositories/EventoRepository.h"
 #include "Evento/Repositories/AgendaRepository.h"
@@ -115,7 +116,14 @@ int main() {
     EquipoController equipoController(equipoService, alumnoRepo, contactoRepo, problemaRepo);
 
     RegistroService registroService(registroRepo, equipoRepo, alumnoRepo, contactoRepo);
-    RegistroController registroController(registroService, problemaRepo);
+    const char* turnstileSecret = getenv("TURNSTILE_SECRET_KEY");
+    const char* turnstileHostname = getenv("TURNSTILE_EXPECTED_HOSTNAME");
+    CurlTurnstileHttpClient turnstileHttpClient;
+    TurnstileValidator turnstileValidator(
+        turnstileSecret ? turnstileSecret : "",
+        turnstileHostname ? turnstileHostname : "",
+        turnstileHttpClient);
+    RegistroController registroController(registroService, problemaRepo, turnstileValidator);
 
     EventoRepository eventoRepo(config);
     EventoService eventoService(eventoRepo);

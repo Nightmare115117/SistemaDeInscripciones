@@ -3,15 +3,18 @@
 #include "Registro/Models/RegistroModel.h"
 #include "Registro/Services/RegistroService.h"
 #include "Problematica/Repositories/ProblemaRepository.h"
+#include "Security/TurnstileValidator.h"
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 class RegistroController : public Controller <RegistroModel, RegistroService> {
     ProblemaRepository& problemaRepo;
+    TurnstileValidator& turnstileValidator;
 
 public:
-    RegistroController(RegistroService& service, ProblemaRepository& problemRepository);
+    RegistroController(RegistroService& service, ProblemaRepository& problemRepository,
+                       TurnstileValidator& turnstileValidator);
 
     crow::json::wvalue toJson(const RegistroModel& entidad) const override;
     RegistroModel fromJson(const crow::json::rvalue& json) const override;
@@ -44,9 +47,28 @@ public:
             try {
                 auto body = crow::json::load(req.body);
                 if (!body || !body.has("equipo") || !body.has("problematica") ||
-                    !body.has("integrantes") || !body.has("aceptaReglamento")) {
+                    !body.has("integrantes") || !body.has("aceptaReglamento") ||
+                    !body.has("turnstileToken")) {
                     crow::json::wvalue error;
                     error["detail"] = "Faltan campos obligatorios del registro";
+                    return crow::response(422, error);
+                }
+
+                TurnstileValidationStatus validation =
+                    turnstileValidator.validate(body["turnstileToken"].s());
+                if (validation == TurnstileValidationStatus::NotConfigured) {
+                    crow::json::wvalue error;
+                    error["detail"] = "La verificacion de seguridad no esta configurada";
+                    return crow::response(503, error);
+                }
+                if (validation == TurnstileValidationStatus::Unavailable) {
+                    crow::json::wvalue error;
+                    error["detail"] = "No fue posible verificar la solicitud. Intenta de nuevo";
+                    return crow::response(503, error);
+                }
+                if (validation == TurnstileValidationStatus::Invalid) {
+                    crow::json::wvalue error;
+                    error["detail"] = "La verificacion de seguridad no es valida. Intenta de nuevo";
                     return crow::response(422, error);
                 }
 

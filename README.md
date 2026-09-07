@@ -151,6 +151,8 @@ DATABASE_URL
 JWT_SECRET
 AES_KEY
 HMAC_KEY
+TURNSTILE_SECRET_KEY
+TURNSTILE_EXPECTED_HOSTNAME
 ```
 
 Las credenciales y secretos no deben almacenarse directamente en el código fuente.
@@ -191,9 +193,18 @@ DATABASE_URL=postgresql://usuario:contraseña@host:puerto/nombre_bd
 JWT_SECRET=una_clave_secreta_segura
 AES_KEY=una_clave_aes_segura
 HMAC_KEY=una_clave_hmac_segura
+TURNSTILE_SECRET_KEY=secreto_de_cloudflare_turnstile
+# Opcional: dominio exacto que genera el token, por ejemplo roadtotech.mx
+TURNSTILE_EXPECTED_HOSTNAME=
 ```
 
 > `.env` está incluido en `.gitignore`. **Nunca subas credenciales o claves secretas al repositorio.**
+
+`POST /api/registro` requiere `turnstileToken`. La API valida el token con
+Cloudflare Siteverify antes de guardar el equipo. Si `TURNSTILE_SECRET_KEY` no
+está configurada, la API inicia pero rechaza registros con `503`. En Kubernetes,
+agrega estas variables al secreto `mi-api-secrets`; nunca las configures en el
+frontend.
 
 ## Compilación
 
@@ -464,6 +475,8 @@ DATABASE_URL
 JWT_SECRET
 AES_KEY
 HMAC_KEY
+TURNSTILE_SECRET_KEY
+TURNSTILE_EXPECTED_HOSTNAME
 ```
 
 Secrets must never be committed to the repository.
@@ -502,9 +515,17 @@ DATABASE_URL=postgresql://user:password@host:port/database_name
 JWT_SECRET=your_secure_jwt_secret
 AES_KEY=your_secure_aes_key
 HMAC_KEY=your_secure_hmac_key
+TURNSTILE_SECRET_KEY=cloudflare_turnstile_secret
+# Optional: exact hostname that issues the token, for example roadtotech.mx
+TURNSTILE_EXPECTED_HOSTNAME=
 ```
 
 > `.env` is included in `.gitignore`. **Never commit credentials or secret keys.**
+
+`POST /api/registro` requires `turnstileToken`. The API validates it with
+Cloudflare Siteverify before saving the team. If `TURNSTILE_SECRET_KEY` is not
+configured, the API starts but rejects registrations with `503`. In Kubernetes,
+add these variables to `mi-api-secrets`; never configure them in the frontend.
 
 ## Build
 
