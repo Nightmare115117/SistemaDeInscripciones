@@ -11,11 +11,11 @@ ProblemaRepository::ProblemaRepository(DBConfig& dbConfig)
 vector<ProblemaModel> ProblemaRepository::findAll() const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idproblematica, nombre, descripcion FROM problematica");
+    result r = txn.exec("SELECT idproblematica, nombre, descripcion, coalesce(codigo, '') AS codigo FROM problematica");
 
     vector<ProblemaModel> lista;
     for (const auto &fila : r) {
-        ProblemaModel problema(fila["nombre"].as<string>(), fila["descripcion"].as<string>());
+        ProblemaModel problema(fila["nombre"].as<string>(), fila["descripcion"].as<string>(), fila["codigo"].as<string>());
         problema.setId(fila["idproblematica"].as<int>());
         lista.push_back(problema);
     }
@@ -26,13 +26,13 @@ vector<ProblemaModel> ProblemaRepository::findAll() const {
 ProblemaModel ProblemaRepository::findById(int id) const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    result r = txn.exec("SELECT idproblematica, nombre, descripcion FROM problematica WHERE idproblematica = $1", params{id});
+    result r = txn.exec("SELECT idproblematica, nombre, descripcion, coalesce(codigo, '') AS codigo FROM problematica WHERE idproblematica = $1", params{id});
 
     if (r.empty()) {
         throw logic_error("No existe una problematica con el id mencionado");
     }
 
-    ProblemaModel problema(r[0]["nombre"].as<string>(), r[0]["descripcion"].as<string>());
+    ProblemaModel problema(r[0]["nombre"].as<string>(), r[0]["descripcion"].as<string>(), r[0]["codigo"].as<string>());
     problema.setId(r[0]["idproblematica"].as<int>());
     return problema;
 }
@@ -56,11 +56,12 @@ int ProblemaRepository::findIdByCodigo(const string& codigo) const {
 int ProblemaRepository::insert(const ProblemaModel& entity) {
     connection conn(dbConfig.obtenerDatabaseUrl());
     work txn(conn);
-    result r = txn.exec(R"sql(INSERT INTO problematica (nombre, descripcion)
-        VALUES ($1, $2)
+    result r = txn.exec(R"sql(INSERT INTO problematica (nombre, descripcion, codigo)
+        VALUES ($1, $2, $3)
         RETURNING idproblematica)sql", params{
         entity.getNombre(),
-        entity.getDescripcion()
+        entity.getDescripcion(),
+        entity.getCodigo()
     });
 
     txn.commit();
@@ -72,10 +73,12 @@ bool ProblemaRepository::update(const ProblemaModel& entity) {
     work txn(conn);
     result r = txn.exec(R"sql(UPDATE problematica SET
         nombre = CASE WHEN $1 <> '' THEN $1 ELSE nombre END,
-        descripcion = CASE WHEN $2 <> '' THEN $2 ELSE descripcion END
-        WHERE idproblematica = $3)sql", params{
+        descripcion = CASE WHEN $2 <> '' THEN $2 ELSE descripcion END,
+        codigo = CASE WHEN $3 <> '' THEN $3 ELSE codigo END
+        WHERE idproblematica = $4)sql", params{
         entity.getNombre(),
         entity.getDescripcion(),
+        entity.getCodigo(),
         entity.getId()
     });
 

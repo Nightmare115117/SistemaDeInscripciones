@@ -91,7 +91,7 @@ public:
                 }
 
                 int idProblematica = problemaRepo.findIdByCodigo(body["problematica"].s());
-                EquipoModel equipo(body["equipo"].s(), -1, -1, idProblematica);
+                EquipoModel equipo(body["equipo"].s(), -1, idProblematica);
                 RegistroModel registro(-1);
                 int id = service.insertRegistroCompleto(registro, equipo, alumnos, contactos);
                 crow::json::wvalue res;

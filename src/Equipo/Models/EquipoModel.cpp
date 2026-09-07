@@ -2,13 +2,13 @@
 
 using namespace std;
 
-EquipoModel::EquipoModel() : EquipoModel("", -1, -1, -1) {}
+EquipoModel::EquipoModel() : EquipoModel("", -1, -1) {}
 
 EquipoModel::EquipoModel(const string& nombre)
-    : Entity<int>(0), nombre(nombre), idUniversidad(-1), idLider(-1), idProblematica(-1), estado("pendiente") {}
+    : Entity<int>(0), nombre(nombre), idLider(-1), idProblematica(-1), estado("pendiente") {}
 
-EquipoModel::EquipoModel(const string& nombre, int idUniversidad, int idLider, int idProblematica)
-    : Entity<int>(0), nombre(nombre), idUniversidad(idUniversidad), idLider(idLider), idProblematica(idProblematica), estado("pendiente") {}
+EquipoModel::EquipoModel(const string& nombre, int idLider, int idProblematica)
+    : Entity<int>(0), nombre(nombre), idLider(idLider), idProblematica(idProblematica), estado("pendiente") {}
 
 const string& EquipoModel::getNombre() const {
     return nombre;
@@ -16,10 +16,6 @@ const string& EquipoModel::getNombre() const {
 
 int EquipoModel::getIdLider() const {
     return idLider;
-}
-
-int EquipoModel::getIdUniversidad() const {
-    return idUniversidad;
 }
 
 int EquipoModel::getIdProblematica() const {
@@ -37,10 +33,6 @@ void EquipoModel::setNombre(const string& nombre) {
 
 void EquipoModel::setIdLider(int idLider) {
     this->idLider = idLider;
-}
-
-void EquipoModel::setIdUniversidad(int idUniversidad) {
-    this->idUniversidad = idUniversidad;
 }
 
 void EquipoModel::setIdProblematica(int idProblematica) {

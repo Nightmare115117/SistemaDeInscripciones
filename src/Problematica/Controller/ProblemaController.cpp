@@ -9,6 +9,7 @@ crow::json::wvalue ProblemaController::toJson(const ProblemaModel& entidad) cons
     json["id"] = entidad.getId();
     json["nombre"] = entidad.getNombre();
     json["descripcion"] = entidad.getDescripcion();
+    json["codigo"] = entidad.getCodigo();
     return json;
 }
 
@@ -20,5 +21,6 @@ ProblemaModel ProblemaController::fromJson(const crow::json::rvalue& json) const
         throw std::invalid_argument("Falta el campo 'descripcion'");
     }
 
-    return ProblemaModel(json["nombre"].s(), json["descripcion"].s());
+    std::string codigo = json.has("codigo") ? json["codigo"].s() : std::string("");
+    return ProblemaModel(json["nombre"].s(), json["descripcion"].s(), codigo);
 }
