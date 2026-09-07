@@ -301,7 +301,6 @@ Todas las rutas siguientes requieren un JWT, salvo `/api/login`:
 | GET/POST/PATCH/DELETE | `/api/staff[/<id>]` | Administrar staff |
 | POST/PATCH/DELETE | `/api/patrocinadores[/<id>]` | Administrar patrocinadores |
 | PATCH | `/api/evento` | Actualizar la configuración del evento |
-| GET | `/api/correos/estado` | Consultar la configuración de correo |
 
 Los endpoints protegidos requieren el header `Authorization`:
 
@@ -613,7 +612,6 @@ All of the following routes require a JWT, except `/api/login`:
 | GET/POST/PATCH/DELETE | `/api/staff[/<id>]` | Manage staff |
 | POST/PATCH/DELETE | `/api/patrocinadores[/<id>]` | Manage sponsors |
 | PATCH | `/api/evento` | Update event configuration |
-| GET | `/api/correos/estado` | Read email configuration status |
 
 Protected endpoints require the `Authorization` header:
 

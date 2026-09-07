@@ -43,9 +43,6 @@ EquipoModel EquipoController::fromJson(const crow::json::rvalue& json) const {
     if (!json.has("nombre")) {
         throw std::invalid_argument("Falta el campo 'nombre'");
     }
-    if (!json.has("idUniversidad")) {
-        throw std::invalid_argument("Falta el campo 'idUniversidad'");
-    }
     if (!json.has("idLider")) {
         throw std::invalid_argument("Falta el campo 'idLider'");
     }
@@ -55,7 +52,6 @@ EquipoModel EquipoController::fromJson(const crow::json::rvalue& json) const {
 
     EquipoModel equipo(
         json["nombre"].s(),
-        json["idUniversidad"].i(),
         json["idLider"].i(),
         json["idProblematica"].i()
     );

@@ -36,10 +36,5 @@ public:
                 return crow::response(200, json(service.update(item)));
             } catch (const std::exception& e) { crow::json::wvalue error; error["detail"] = e.what(); return crow::response(422, error); }
         });
-        CROW_ROUTE(app, "/api/correos/estado").methods(crow::HTTPMethod::GET)([this] {
-            auto item = service.correoEstado(); crow::json::wvalue out;
-            out["configurado"] = item.getConfigurado(); out["habilitado"] = item.getHabilitado(); out["remitente"] = item.getRemitente();
-            return crow::response(200, out);
-        });
     }
 };
