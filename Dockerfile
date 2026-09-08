@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone --branch 8.0.1 https://github.com/jtv/libpqxx.git /tmp/libpqxx && \
     cd /tmp/libpqxx && \
-    cmake -B build -DCMAKE_BUILD_TYPE=Release && \
+    cmake -B build -DCMAKE_BUILD_TYPE=Release \
+        -DSKIP_BUILD_TEST=ON \
+        -DSKIP_BUILD_EXAMPLES=ON && \
     cmake --build build -j$(nproc) && \
     cmake --install build && \
     rm -rf /tmp/libpqxx
