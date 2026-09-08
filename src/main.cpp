@@ -2,6 +2,7 @@
 #include "crow/middlewares/cors.h"
 #include "DBConfig/DBConfig.h"
 #include "Middleware/AuthMiddleware.h"
+#include "Middleware/RateLimitMiddleware.h"
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
@@ -60,7 +61,7 @@
 using namespace std;
 using namespace pqxx;
 
-using App = crow::App<crow::CORSHandler, AuthMiddleware>;
+using App = crow::App<crow::CORSHandler, RateLimitMiddleware, AuthMiddleware>;
 
 /**  string obtenerDatabaseUrl() {
     const char* db_url = getenv("DATABASE_URL");

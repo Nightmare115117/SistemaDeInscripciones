@@ -196,6 +196,9 @@ HMAC_KEY=una_clave_hmac_segura
 TURNSTILE_SECRET_KEY=secreto_de_cloudflare_turnstile
 # Opcional: dominio exacto que genera el token, por ejemplo roadtotech.mx
 TURNSTILE_EXPECTED_HOSTNAME=
+# Opcionales: 100 solicitudes por IP cada 60 segundos por defecto
+RATE_LIMIT_MAX_REQUESTS=100
+RATE_LIMIT_WINDOW_SECONDS=60
 ```
 
 > `.env` está incluido en `.gitignore`. **Nunca subas credenciales o claves secretas al repositorio.**
