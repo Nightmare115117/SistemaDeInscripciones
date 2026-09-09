@@ -1,6 +1,8 @@
 #include "RegistroService.h"
 #include "Security/Crypto.h"
 #include <stdexcept>
+#include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -10,9 +12,10 @@ RegistroService::RegistroService(RegistroRepository& repo)
 RegistroService::RegistroService(RegistroRepository& registroRepo,
                                                                  EquipoRepository& equipoRepo,
                                                                  AlumnoRepository& alumnoRepo,
-                                                                 ContactoEmergenciaRepository& contactoRepo)
+                                                                 ContactoEmergenciaRepository& contactoRepo,
+                                                                 EventoRepository& eventoRepo)
         : Service<RegistroModel, RegistroRepository>(registroRepo),
-            equipoRepo(&equipoRepo), alumnoRepo(&alumnoRepo), contactoRepo(&contactoRepo) {}
+            equipoRepo(&equipoRepo), alumnoRepo(&alumnoRepo), contactoRepo(&contactoRepo), eventoRepo(&eventoRepo) {}
 
 bool RegistroService::validate(const RegistroModel& entity) {
     if (entity.getIdEquipo() <= 0 && entity.getIdEquipo() != -1) return false;
@@ -70,6 +73,42 @@ int RegistroService::insertRegistroCompleto(RegistroModel registro,
     }
     if (alumnos.empty() || alumnos.size() != contactos.size()) {
         throw invalid_argument("Cada integrante debe tener un contacto de emergencia");
+    }
+
+    if (eventoRepo) {
+        const auto config = eventoRepo->find();
+        if (!config.getRegistroAbierto()) {
+            throw invalid_argument("El registro está cerrado.");
+        }
+        if (config.getMinIntegrantes() > static_cast<int>(alumnos.size()) || static_cast<int>(alumnos.size()) > config.getMaxIntegrantes()) {
+            throw invalid_argument("El equipo debe tener entre " + to_string(config.getMinIntegrantes()) + " y " + to_string(config.getMaxIntegrantes()) + " integrantes.");
+        }
+
+        int aceptados = 0;
+        for (const auto& item : equipoRepo->findAll()) {
+            if (item.getEstado() == "aceptado") ++aceptados;
+        }
+        if (aceptados >= config.getCupo()) {
+            throw invalid_argument("El cupo de " + to_string(config.getCupo()) + " equipos está lleno.");
+        }
+    }
+
+    set<string> emailsVistos;
+    for (const auto& alumno : alumnos) {
+        string correoLower = alumno.getCorreo();
+        transform(correoLower.begin(), correoLower.end(), correoLower.begin(), [](unsigned char c){ return static_cast<char>(tolower(c)); });
+        if (!correoLower.empty() && emailsVistos.count(correoLower) > 0) {
+            throw invalid_argument("Ese correo ya está registrado.");
+        }
+        emailsVistos.insert(correoLower);
+
+        for (const auto& registrado : alumnoRepo->findAll()) {
+            string correoRegistrado = registrado.getCorreo();
+            transform(correoRegistrado.begin(), correoRegistrado.end(), correoRegistrado.begin(), [](unsigned char c){ return static_cast<char>(tolower(c)); });
+            if (correoRegistrado == correoLower) {
+                throw invalid_argument("Ese correo ya está registrado.");
+            }
+        }
     }
 
     int equipoId = equipoRepo->insert(equipo);

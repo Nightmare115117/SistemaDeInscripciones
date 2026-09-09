@@ -116,7 +116,8 @@ int main() {
 
     EquipoController equipoController(equipoService, alumnoRepo, contactoRepo, problemaRepo);
 
-    RegistroService registroService(registroRepo, equipoRepo, alumnoRepo, contactoRepo);
+    EventoRepository eventoRepo(config);
+    RegistroService registroService(registroRepo, equipoRepo, alumnoRepo, contactoRepo, eventoRepo);
     const char* turnstileSecret = getenv("TURNSTILE_SECRET_KEY");
     const char* turnstileHostname = getenv("TURNSTILE_EXPECTED_HOSTNAME");
     CurlTurnstileHttpClient turnstileHttpClient;
@@ -126,7 +127,6 @@ int main() {
         turnstileHttpClient);
     RegistroController registroController(registroService, problemaRepo, turnstileValidator);
 
-    EventoRepository eventoRepo(config);
     EventoService eventoService(eventoRepo);
     EventoController eventoController(eventoService);
     AgendaRepository agendaRepo(config);

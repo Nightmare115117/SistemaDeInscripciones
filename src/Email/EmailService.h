@@ -12,6 +12,6 @@ public:
     static bool sendEmail(
         const std::string& to,
         const std::string& subject,
-        const std::string& body
+        const std::string& html = ""
         );
 };

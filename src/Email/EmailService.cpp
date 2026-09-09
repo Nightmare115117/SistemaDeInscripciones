@@ -39,7 +39,7 @@ const string EmailService::RESEND_FROM_EMAIL = [] {
 
 }();
 
-bool EmailService::sendEmail(const std::string& to, const std::string& subject, const std::string& body) {
+bool EmailService::sendEmail(const std::string& to, const std::string& subject, const std::string& html) {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     CURL* curl = curl_easy_init();
 
@@ -70,7 +70,7 @@ bool EmailService::sendEmail(const std::string& to, const std::string& subject, 
     contenido["from"] = RESEND_FROM_EMAIL;
     contenido["to"] = to;
     contenido["subject"] = subject;
-    contenido["text"] = body;
+    contenido["html"] = html;
 
     string cont = contenido.dump();
 

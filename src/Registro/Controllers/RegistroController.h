@@ -4,9 +4,14 @@
 #include "Registro/Services/RegistroService.h"
 #include "Problematica/Repositories/ProblemaRepository.h"
 #include "Security/TurnstileValidator.h"
+#include "Security/Crypto.h"
+#include "Email/EmailService.h"
+#include "DBConfig/DBConfig.h"
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <pqxx/pqxx>
+#include <ctime>
 
 class RegistroController : public Controller <RegistroModel, RegistroService> {
     ProblemaRepository& problemaRepo;
@@ -91,6 +96,28 @@ public:
                     alumno.setNombre(integrante["nombre"].s());
                     alumno.setCorreo(integrante["correo"].s());
                     alumno.setNumeroTel(integrante["telefono"].s());
+                    alumno.setEdad(integrante.has("edad") ? integrante["edad"].i() : 0);
+                    alumno.setNivelEstudio(integrante.has("nivelEstudio") ? integrante["nivelEstudio"].i() : (integrante.has("nivel_estudio") ? integrante["nivel_estudio"].i() : -1));
+                    alumno.setIdPais(integrante.has("paisResidencia") ? integrante["paisResidencia"].i() : -1);
+                    if (integrante.has("institucion")) {
+                        const auto& institucion = integrante["institucion"];
+                        if (institucion.t() == crow::json::type::Number) {
+                            alumno.setIdUniversidad(institucion.i());
+                        } else if (institucion.t() == crow::json::type::String) {
+                            try {
+                                alumno.setIdUniversidad(std::stoi(institucion.s()));
+                            } catch (...) {
+                                alumno.setIdUniversidad(-1);
+                            }
+                        } else {
+                            alumno.setIdUniversidad(-1);
+                        }
+                    } else {
+                        alumno.setIdUniversidad(-1);
+                    }
+                    alumno.setAceptaCodigoConductaMLH(integrante.has("aceptaCodigoConductaMLH") && integrante["aceptaCodigoConductaMLH"].b());
+                    alumno.setAceptaCompartirDatosMLH(integrante.has("aceptaCompartirDatosMLH") && integrante["aceptaCompartirDatosMLH"].b());
+                    alumno.setAceptaCorreosMLH(integrante.has("aceptaCorreosMLH") && integrante["aceptaCorreosMLH"].b());
                     std::string alergias;
                     if (integrante.has("alergias")) {
                         alergias = integrante["alergias"].s();
@@ -99,7 +126,6 @@ public:
                     alumno.setFirmoTerminos(body["aceptaReglamento"].b());
                     alumno.setIdEquipo(-1);
                     alumno.setIdContacto(-1);
-                    alumno.setIdUniversidad(-1);
                     alumnos.push_back(alumno);
 
                     contactos.emplace_back(
@@ -116,6 +142,25 @@ public:
                 EquipoModel equipo(body["equipo"].s(), -1, idProblematica);
                 RegistroModel registro(-1);
                 int id = service.insertRegistroCompleto(registro, equipo, alumnos, contactos);
+
+                try {
+                    const auto& lider = alumnos.front();
+                    const std::string leaderEmail = lider.getCorreo();
+                    const std::string equipoNombre = body["equipo"].s();
+                    const std::string token = "verify_" + std::to_string(id) + "_" + std::to_string(std::time(nullptr));
+                    DBConfig dbConfig;
+                    pqxx::connection conn(dbConfig.obtenerDatabaseUrl());
+                    pqxx::work txn(conn);
+                    const std::string tokenSql = token;
+                    txn.exec("INSERT INTO email_verification_tokens (equipo_id, email, token, expira_en) VALUES ($1, $2, $3, NOW() + INTERVAL '24 hours') ON CONFLICT (token) DO NOTHING",
+                             pqxx::params{id, leaderEmail, tokenSql});
+                    txn.commit();
+                    const std::string html = "<html><body><p>Hola,</p><p>Confirma tu correo para verificar tu equipo <strong>" + equipoNombre + "</strong>.</p><p><a href=\"https://roadtotech.mx/registro/verificar?token=" + token + "\">Verificar correo</a></p></body></html>";
+                    EmailService::sendEmail(leaderEmail, "Verifica tu correo del equipo", html);
+                } catch (const std::exception&) {
+                    // No rompe el registro si falla el correo de verificación.
+                }
+
                 crow::json::wvalue res;
                 res["id"] = id;
                 res["nombre"] = body["equipo"].s();
