@@ -1,4 +1,6 @@
 #include "EquipoController.h"
+#include "Email/EmailService.h"
+#include "Security/Crypto.h"
 #include <stdexcept>
 
 EquipoController::EquipoController(EquipoService& service, AlumnoRepository& alumnos,
@@ -24,6 +26,7 @@ crow::json::wvalue EquipoController::toJson(const EquipoModel& entidad) const {
         integrante["correo"] = alumno.getCorreo();
         integrante["telefono"] = alumno.getNumeroTel();
         integrante["institucion"] = std::to_string(alumno.getIdUniversidad());
+        integrante["correoVerificado"] = alumno.getCorreoVerificado();
         integrante["alergias"] = alumno.getAlergias();
         if (alumno.getIdContacto() > 0) {
             auto contacto = contactoRepo.findById(alumno.getIdContacto());

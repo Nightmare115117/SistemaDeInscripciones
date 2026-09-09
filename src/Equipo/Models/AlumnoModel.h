@@ -18,6 +18,11 @@ class AlumnoModel : public Entity<int> {
     int idUniversidad;
     int nivelStudio;
     int idPais;
+    int edad = 0;
+    bool aceptaCodigoConductaMLH = false;
+    bool aceptaCompartirDatosMLH = false;
+    bool aceptaCorreosMLH = false;
+    bool correoVerificado = false;
 
 public:
 
@@ -48,6 +53,11 @@ public:
     int getIdUniversidad() const;
     int getNivelEstudio() const;
     int getIdPais() const;
+    int getEdad() const;
+    bool getAceptaCodigoConductaMLH() const;
+    bool getAceptaCompartirDatosMLH() const;
+    bool getAceptaCorreosMLH() const;
+    bool getCorreoVerificado() const;
 
     void setNombre(const std::string& nombre);
     void setIdEquipo(int idEquipo);
@@ -63,4 +73,9 @@ public:
     void setIdUniversidad(int id);
     void setNivelEstudio(int id);
     void setIdPais(int id);
+    void setEdad(int edad);
+    void setAceptaCodigoConductaMLH(bool aceptar);
+    void setAceptaCompartirDatosMLH(bool aceptar);
+    void setAceptaCorreosMLH(bool aceptar);
+    void setCorreoVerificado(bool verificado);
 };

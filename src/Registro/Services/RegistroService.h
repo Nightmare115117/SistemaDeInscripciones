@@ -8,6 +8,7 @@
 #include "Equipo/Repositories/EquipoRepository.h"
 #include "Equipo/Repositories/AlumnoRepository.h"
 #include "Equipo/Repositories/ContactoEmergenciaRepository.h"
+#include "Evento/Repositories/EventoRepository.h"
 #include <vector>
 
 class RegistroService : public Service <RegistroModel, RegistroRepository> {
@@ -18,7 +19,8 @@ public:
     RegistroService(RegistroRepository& registroRepo,
                     EquipoRepository& equipoRepo,
                     AlumnoRepository& alumnoRepo,
-                    ContactoEmergenciaRepository& contactoRepo);
+                    ContactoEmergenciaRepository& contactoRepo,
+                    EventoRepository& eventoRepo);
 
     std::vector<RegistroModel> findAll() const;
     RegistroModel findById(int id) const;
@@ -40,4 +42,5 @@ private:
     EquipoRepository* equipoRepo = nullptr;
     AlumnoRepository* alumnoRepo = nullptr;
     ContactoEmergenciaRepository* contactoRepo = nullptr;
+    EventoRepository* eventoRepo = nullptr;
 };

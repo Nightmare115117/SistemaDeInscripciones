@@ -21,6 +21,11 @@ crow::json::wvalue AlumnoController::toJson(const AlumnoModel& entidad) const {
     json["idUniversidad"] = entidad.getIdUniversidad();
     json["nivel_estudio"] = entidad.getNivelEstudio();
     json["idPais"] = entidad.getIdPais();
+    json["edad"] = entidad.getEdad();
+    json["aceptaCodigoConductaMLH"] = entidad.getAceptaCodigoConductaMLH();
+    json["aceptaCompartirDatosMLH"] = entidad.getAceptaCompartirDatosMLH();
+    json["aceptaCorreosMLH"] = entidad.getAceptaCorreosMLH();
+    json["correoVerificado"] = entidad.getCorreoVerificado();
     return json;
 }
 
@@ -80,8 +85,12 @@ AlumnoModel AlumnoController::fromJson(const crow::json::rvalue& json) const {
     alumno.setIdContacto(json.has("idContacto") ? json["idContacto"].i() : -1);
 
     alumno.setIdUniversidad(json.has("idUniversidad") ? json["idUniversidad"].i() : -1);
-    alumno.setNivelEstudio(json.has("nivel_estudio") ? json["nivel_estudio"].i() : -1);
-    alumno.setIdPais(json.has("idPais") ? json["idPais"].i() : -1);
+    alumno.setNivelEstudio(json.has("nivel_estudio") ? json["nivel_estudio"].i() : (json.has("nivelEstudio") ? json["nivelEstudio"].i() : -1));
+    alumno.setIdPais(json.has("idPais") ? json["idPais"].i() : (json.has("paisResidencia") ? json["paisResidencia"].i() : -1));
+    alumno.setEdad(json.has("edad") ? json["edad"].i() : 0);
+    alumno.setAceptaCodigoConductaMLH(json.has("aceptaCodigoConductaMLH") && json["aceptaCodigoConductaMLH"].b());
+    alumno.setAceptaCompartirDatosMLH(json.has("aceptaCompartirDatosMLH") && json["aceptaCompartirDatosMLH"].b());
+    alumno.setAceptaCorreosMLH(json.has("aceptaCorreosMLH") && json["aceptaCorreosMLH"].b());
 
     return alumno;
 }

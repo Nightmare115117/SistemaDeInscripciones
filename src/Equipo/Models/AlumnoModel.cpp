@@ -93,6 +93,26 @@ int AlumnoModel::getIdPais() const {
     return idPais;
 }
 
+int AlumnoModel::getEdad() const {
+    return edad;
+}
+
+bool AlumnoModel::getAceptaCodigoConductaMLH() const {
+    return aceptaCodigoConductaMLH;
+}
+
+bool AlumnoModel::getAceptaCompartirDatosMLH() const {
+    return aceptaCompartirDatosMLH;
+}
+
+bool AlumnoModel::getAceptaCorreosMLH() const {
+    return aceptaCorreosMLH;
+}
+
+bool AlumnoModel::getCorreoVerificado() const {
+    return correoVerificado;
+}
+
 void AlumnoModel::setFirmoTerminos(bool firmo) {
     this->firmoTerminos = firmo;
 }
@@ -139,4 +159,24 @@ void AlumnoModel::setNivelEstudio(int id) {
 
 void AlumnoModel::setIdPais(int id) {
     this->idPais = id;
+}
+
+void AlumnoModel::setEdad(int edad) {
+    this->edad = edad;
+}
+
+void AlumnoModel::setAceptaCodigoConductaMLH(bool aceptar) {
+    this->aceptaCodigoConductaMLH = aceptar;
+}
+
+void AlumnoModel::setAceptaCompartirDatosMLH(bool aceptar) {
+    this->aceptaCompartirDatosMLH = aceptar;
+}
+
+void AlumnoModel::setAceptaCorreosMLH(bool aceptar) {
+    this->aceptaCorreosMLH = aceptar;
+}
+
+void AlumnoModel::setCorreoVerificado(bool verificado) {
+    this->correoVerificado = verificado;
 }

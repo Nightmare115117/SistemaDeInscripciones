@@ -1,9 +1,21 @@
 #include "AlumnoRepository.h"
+#include "Security/Crypto.h"
 #include <pqxx/pqxx>
 #include <stdexcept>
 
 using namespace std;
 using namespace pqxx;
+
+namespace {
+    std::string safeDecrypt(const std::string& value) {
+        if (value.empty()) return "";
+        try {
+            return AES::decrypt(value);
+        } catch (...) {
+            return value;
+        }
+    }
+}
 
 AlumnoRepository::AlumnoRepository(DBConfig& dbConfig) : dbConfig(dbConfig) {}
 
@@ -22,8 +34,14 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         alergias,
         condicion,
         medicamento,
-        idcontacto
-        iduniversidad
+        idcontacto,
+        iduniversidad,
+        id_pais,
+        edad,
+        acepta_codigo_conducta_mlh,
+        acepta_compartir_datos_mlh,
+        acepta_correos_mlh,
+        correo_verificado
     FROM alumnos)sql");
 
     vector<AlumnoModel> lista;
@@ -33,8 +51,8 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         alumno.setId(fila["idalumno"].as<int>());
         alumno.setIdEquipo(fila["idequipo"].as<int>());
         alumno.setFirmoTerminos(fila["firmoterminos"].as<bool>());
-        alumno.setCorreo(fila["correo"].as<string>());
-        alumno.setNumeroTel(fila["numerotel"].as<string>());
+        alumno.setCorreo(safeDecrypt(fila["correo"].as<string>()));
+        alumno.setNumeroTel(safeDecrypt(fila["numerotel"].as<string>()));
         alumno.setApellidoPaterno(fila["apellidopaterno"].as<string>());
         alumno.setApellidoMaterno(fila["apellidomaterno"].as<string>());
         alumno.setAlergias(fila["alergias"].as<string>());
@@ -64,7 +82,13 @@ AlumnoModel AlumnoRepository::findById(int id) const{
         condicion,
         medicamento,
         idcontacto,
-        iduniversidad
+        iduniversidad,
+        id_pais,
+        edad,
+        acepta_codigo_conducta_mlh,
+        acepta_compartir_datos_mlh,
+        acepta_correos_mlh,
+        correo_verificado
     FROM alumnos WHERE idalumno = $1)sql", params{id});
 
     if (r.empty()) {
@@ -75,8 +99,8 @@ AlumnoModel AlumnoRepository::findById(int id) const{
     alumno.setId(r[0]["idalumno"].as<int>());
     alumno.setIdEquipo(r[0]["idequipo"].as<int>());
     alumno.setFirmoTerminos(r[0]["firmoterminos"].as<bool>());
-    alumno.setCorreo(r[0]["correo"].as<string>());
-    alumno.setNumeroTel(r[0]["numerotel"].as<string>());
+    alumno.setCorreo(safeDecrypt(r[0]["correo"].as<string>()));
+    alumno.setNumeroTel(safeDecrypt(r[0]["numerotel"].as<string>()));
     alumno.setApellidoPaterno(r[0]["apellidopaterno"].as<string>());
     alumno.setApellidoMaterno(r[0]["apellidomaterno"].as<string>());
     alumno.setAlergias(r[0]["alergias"].as<string>());
@@ -84,6 +108,12 @@ AlumnoModel AlumnoRepository::findById(int id) const{
     alumno.setMedicamento(r[0]["medicamento"].as<string>());
     alumno.setIdContacto(r[0]["idcontacto"].as<int>());
     alumno.setIdUniversidad(r[0]["iduniversidad"].as<int>());
+    alumno.setIdPais(r[0]["id_pais"].is_null() ? -1 : r[0]["id_pais"].as<int>());
+    alumno.setEdad(r[0]["edad"].is_null() ? 0 : r[0]["edad"].as<int>());
+    alumno.setAceptaCodigoConductaMLH(r[0]["acepta_codigo_conducta_mlh"].as<bool>());
+    alumno.setAceptaCompartirDatosMLH(r[0]["acepta_compartir_datos_mlh"].as<bool>());
+    alumno.setAceptaCorreosMLH(r[0]["acepta_correos_mlh"].as<bool>());
+    alumno.setCorreoVerificado(r[0]["correo_verificado"].as<bool>());
 
     return alumno;
 }
@@ -94,7 +124,8 @@ vector<AlumnoModel> AlumnoRepository::findByEquipoId(int equipoId) const {
     result r = txn.exec(R"sql(SELECT
         idalumno, nombre, idequipo, firmoterminos, correo, numerotel,
         apellidopaterno, apellidomaterno, alergias, condicion, medicamento,
-        idcontacto, iduniversidad
+        idcontacto, iduniversidad, id_pais, edad,
+        acepta_codigo_conducta_mlh, acepta_compartir_datos_mlh, acepta_correos_mlh, correo_verificado
     FROM alumnos WHERE idequipo = $1 ORDER BY idalumno)sql", params{equipoId});
 
     vector<AlumnoModel> lista;
@@ -103,8 +134,8 @@ vector<AlumnoModel> AlumnoRepository::findByEquipoId(int equipoId) const {
         alumno.setId(fila["idalumno"].as<int>());
         alumno.setIdEquipo(fila["idequipo"].as<int>());
         alumno.setFirmoTerminos(fila["firmoterminos"].as<bool>());
-        alumno.setCorreo(fila["correo"].as<string>());
-        alumno.setNumeroTel(fila["numerotel"].as<string>());
+        alumno.setCorreo(safeDecrypt(fila["correo"].as<string>()));
+        alumno.setNumeroTel(safeDecrypt(fila["numerotel"].as<string>()));
         alumno.setApellidoPaterno(fila["apellidopaterno"].as<string>());
         alumno.setApellidoMaterno(fila["apellidomaterno"].as<string>());
         alumno.setAlergias(fila["alergias"].as<string>());
@@ -132,21 +163,33 @@ int AlumnoRepository::insert(const AlumnoModel& entity) {
         condicion, 
         medicamento, 
         idcontacto,
-        iduniversidad) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+        iduniversidad,
+        id_pais,
+        edad,
+        acepta_codigo_conducta_mlh,
+        acepta_compartir_datos_mlh,
+        acepta_correos_mlh,
+        correo_verificado) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) 
         RETURNING idalumno)sql", params{
-        entity.getNombre(), // parametro 1
-        entity.getIdEquipo(), // parametro 2
-        entity.firmoterminos(), // parametro 3
-        entity.getCorreo(), // parametro 4
-        entity.getNumeroTel(), // parametro 5
-        entity.getApellidoPaterno(), // parametro 6
-        entity.getApellidoMaterno(), // parametro 7
-        entity.getAlergias(), // parametro 8
-        entity.getCondicionMedica(), // parametro 9
-        entity.getMedicamento(), // parametro 10
-        entity.getIdContacto(), // parametro 11
-        entity.getIdUniversidad() //parametro 12
+        entity.getNombre(),
+        entity.getIdEquipo(),
+        entity.firmoterminos(),
+        entity.getCorreo(),
+        entity.getNumeroTel(),
+        entity.getApellidoPaterno(),
+        entity.getApellidoMaterno(),
+        entity.getAlergias(),
+        entity.getCondicionMedica(),
+        entity.getMedicamento(),
+        entity.getIdContacto(),
+        entity.getIdUniversidad(),
+        entity.getIdPais(),
+        entity.getEdad(),
+        entity.getAceptaCodigoConductaMLH(),
+        entity.getAceptaCompartirDatosMLH(),
+        entity.getAceptaCorreosMLH(),
+        entity.getCorreoVerificado()
     });
 
     txn.commit();
@@ -169,8 +212,14 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         condicion = CASE WHEN $9 <> '' THEN $9 ELSE condicion END,
         medicamento = CASE WHEN $10 <> '' THEN $10 ELSE medicamento END,
         idcontacto = CASE WHEN $11 <> -1 THEN $11 ELSE idcontacto END,
-        iduniversidad = CASE WHEN $12 <> -1 THE  $12 ELSE iduniversidad END,
-    WHERE idalumno = $13)sql", params{
+        iduniversidad = CASE WHEN $12 <> -1 THEN $12 ELSE iduniversidad END,
+        id_pais = CASE WHEN $13 <> -1 THEN $13 ELSE id_pais END,
+        edad = CASE WHEN $14 <> 0 THEN $14 ELSE edad END,
+        acepta_codigo_conducta_mlh = $15,
+        acepta_compartir_datos_mlh = $16,
+        acepta_correos_mlh = $17,
+        correo_verificado = $18
+    WHERE idalumno = $19)sql", params{
         entity.getNombre(),
         entity.getIdEquipo(),
         entity.firmoterminos(),
@@ -183,6 +232,12 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         entity.getMedicamento(),
         entity.getIdContacto(),
         entity.getIdUniversidad(),
+        entity.getIdPais(),
+        entity.getEdad(),
+        entity.getAceptaCodigoConductaMLH(),
+        entity.getAceptaCompartirDatosMLH(),
+        entity.getAceptaCorreosMLH(),
+        entity.getCorreoVerificado(),
         entity.getId()
     });
 
