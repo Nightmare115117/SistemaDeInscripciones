@@ -87,7 +87,16 @@ int RegistroRepository::countById() const {
 RegistroRepository::CountDTO RegistroRepository::countStats() const {
     connection conn(dbConfig.obtenerDatabaseUrl());
     nontransaction txn(conn);
-    auto row = txn.exec("SELECT count(*)::int, count(*) FILTER (WHERE e.estado = 'aceptado')::int, count(*) FILTER (WHERE e.estado = 'pendiente')::int, c.cupo, c.registro_abierto FROM registro r JOIN equipo e ON e.idequipo = r.idequipo CROSS JOIN evento_configuracion c WHERE c.id = 1").one_row();
+    auto row = txn.exec(
+        "SELECT count(r.idregistro)::int, "
+        "count(e.idequipo) FILTER (WHERE e.estado = 'aceptado')::int, "
+        "count(e.idequipo) FILTER (WHERE e.estado = 'pendiente')::int, "
+        "c.cupo, c.registro_abierto "
+        "FROM evento_configuracion c "
+        "LEFT JOIN registro r ON true "
+        "LEFT JOIN equipo e ON e.idequipo = r.idequipo "
+        "WHERE c.id = 1 "
+        "GROUP BY c.cupo, c.registro_abierto").one_row();
     int total = row[0].as<int>();
     int aceptados = row[1].as<int>();
     int cupo = row[3].as<int>();

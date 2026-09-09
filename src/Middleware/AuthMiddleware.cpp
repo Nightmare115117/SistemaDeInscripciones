@@ -15,6 +15,7 @@ void AuthMiddleware::before_handle(
     string path = req.url;
 
     bool publicRoute = path == "/api/test-db" ||
+        (path == "/api/health" && req.method == HTTPMethod::GET) ||
         (path == "/api/login" && req.method == HTTPMethod::POST) ||
         (path == "/api/registro" && req.method == HTTPMethod::POST) ||
         (path == "/api/registro/count" && req.method == HTTPMethod::GET) ||
