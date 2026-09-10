@@ -52,7 +52,7 @@ vector<AlumnoModel> Cache<AlumnoModel>::get(const string& key) {
                         alumno.setCondicionMedica(elemento["condicion"].get<string>());
                         alumno.setMedicamento(elemento["medicamento"].get<string>());
                         alumno.setIdContacto(elemento["idContacto"].get<int>());
-                        alumno.setIdUniversidad(elemento["idUniversidad"].get<int>());
+                        alumno.setInstitucion(elemento.value("institucion", ""));
                         alumno.setNivelEstudio(elemento["nivel_estudio"].get<int>());
                         alumno.setIdPais(elemento["idPais"].get<int>());
                         alumnos.push_back(alumno);
@@ -97,7 +97,7 @@ void Cache<AlumnoModel>::set(const string& key, const vector<AlumnoModel>& entit
             alumno["condicion"] = elemento.getCondicionMedica();
             alumno["medicamento"] = elemento.getMedicamento();
             alumno["idContacto"] = elemento.getIdContacto();
-            alumno["idUniversidad"] = elemento.getIdUniversidad();
+            alumno["institucion"] = elemento.getInstitucion();
             alumno["nivel_estudio"] = elemento.getNivelEstudio();
             alumno["idPais"] = elemento.getIdPais();
             alumnos.push_back(alumno);

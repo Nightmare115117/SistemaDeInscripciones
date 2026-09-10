@@ -25,7 +25,7 @@ crow::json::wvalue EquipoController::toJson(const EquipoModel& entidad) const {
         integrante["nombre"] = alumno.getNombre();
         integrante["correo"] = alumno.getCorreo();
         integrante["telefono"] = alumno.getNumeroTel();
-        integrante["institucion"] = std::to_string(alumno.getIdUniversidad());
+        integrante["institucion"] = alumno.getInstitucion();
         integrante["correoVerificado"] = alumno.getCorreoVerificado();
         integrante["alergias"] = alumno.getAlergias();
         if (alumno.getIdContacto() > 0) {

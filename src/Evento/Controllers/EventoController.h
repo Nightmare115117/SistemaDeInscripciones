@@ -100,8 +100,13 @@ public:
                 pqxx::connection conn(dbConfig.obtenerDatabaseUrl());
                 pqxx::work txn(conn);
                 const std::string correoSql = correo;
-                auto r = txn.exec("SELECT idequipo, nombre_equipo FROM equipo WHERE idequipo IN (SELECT idequipo FROM alumnos WHERE correo = $1 OR correo = AES_ENCRYPT($1, 'default')) LIMIT 1",
-                                  pqxx::params{correoSql});
+                auto r = txn.exec(
+                    "SELECT e.idequipo, e.nombre_equipo "
+                    "FROM equipo e "
+                    "JOIN alumnos a ON a.idequipo = e.idequipo "
+                    "WHERE LOWER(a.correo) = LOWER($1) "
+                    "LIMIT 1",
+                    pqxx::params{correoSql});
                 if (r.empty()) {
                     txn.commit();
                     return crow::response(202, crow::json::wvalue{{"status", "accepted"}});

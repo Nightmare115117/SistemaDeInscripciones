@@ -11,7 +11,6 @@ AlumnoService::AlumnoService(AlumnoRepository& repo)
 bool AlumnoService::validate(const AlumnoModel& entity) {
     if (entity.getIdEquipo() <= 0 && entity.getIdEquipo() != -1) return false;
     if (entity.getIdContacto() <= 0 && entity.getIdContacto() != -1) return false;
-    if (entity.getIdUniversidad() <= 0 && entity.getIdUniversidad() != -1) return false;
     return true;
 }
 

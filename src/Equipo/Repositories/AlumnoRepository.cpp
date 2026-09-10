@@ -35,7 +35,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         condicion,
         medicamento,
         idcontacto,
-        iduniversidad,
+        institucion,
         id_pais,
         edad,
         acepta_codigo_conducta_mlh,
@@ -59,7 +59,7 @@ vector<AlumnoModel> AlumnoRepository::findAll() const{
         alumno.setCondicionMedica(fila["condicion"].as<string>());
         alumno.setMedicamento(fila["medicamento"].as<string>());
         alumno.setIdContacto(fila["idcontacto"].as<int>());
-        alumno.setIdUniversidad(fila["iduniversidad"].as<int>());
+        alumno.setInstitucion(fila["institucion"].is_null() ? "" : fila["institucion"].as<string>());
         lista.push_back(alumno);
     }
 
@@ -82,7 +82,7 @@ AlumnoModel AlumnoRepository::findById(int id) const{
         condicion,
         medicamento,
         idcontacto,
-        iduniversidad,
+        institucion,
         id_pais,
         edad,
         acepta_codigo_conducta_mlh,
@@ -107,7 +107,7 @@ AlumnoModel AlumnoRepository::findById(int id) const{
     alumno.setCondicionMedica(r[0]["condicion"].as<string>());
     alumno.setMedicamento(r[0]["medicamento"].as<string>());
     alumno.setIdContacto(r[0]["idcontacto"].as<int>());
-    alumno.setIdUniversidad(r[0]["iduniversidad"].as<int>());
+    alumno.setInstitucion(r[0]["institucion"].is_null() ? "" : r[0]["institucion"].as<string>());
     alumno.setIdPais(r[0]["id_pais"].is_null() ? -1 : r[0]["id_pais"].as<int>());
     alumno.setEdad(r[0]["edad"].is_null() ? 0 : r[0]["edad"].as<int>());
     alumno.setAceptaCodigoConductaMLH(r[0]["acepta_codigo_conducta_mlh"].as<bool>());
@@ -124,7 +124,7 @@ vector<AlumnoModel> AlumnoRepository::findByEquipoId(int equipoId) const {
     result r = txn.exec(R"sql(SELECT
         idalumno, nombre, idequipo, firmoterminos, correo, numerotel,
         apellidopaterno, apellidomaterno, alergias, condicion, medicamento,
-        idcontacto, iduniversidad, id_pais, edad,
+        idcontacto, institucion, id_pais, edad,
         acepta_codigo_conducta_mlh, acepta_compartir_datos_mlh, acepta_correos_mlh, correo_verificado
     FROM alumnos WHERE idequipo = $1 ORDER BY idalumno)sql", params{equipoId});
 
@@ -142,7 +142,7 @@ vector<AlumnoModel> AlumnoRepository::findByEquipoId(int equipoId) const {
         alumno.setCondicionMedica(fila["condicion"].as<string>());
         alumno.setMedicamento(fila["medicamento"].as<string>());
         alumno.setIdContacto(fila["idcontacto"].as<int>());
-        alumno.setIdUniversidad(fila["iduniversidad"].as<int>());
+        alumno.setInstitucion(fila["institucion"].is_null() ? "" : fila["institucion"].as<string>());
         lista.push_back(alumno);
     }
     return lista;
@@ -163,7 +163,7 @@ int AlumnoRepository::insert(const AlumnoModel& entity) {
         condicion, 
         medicamento, 
         idcontacto,
-        iduniversidad,
+        institucion,
         id_pais,
         edad,
         acepta_codigo_conducta_mlh,
@@ -183,7 +183,7 @@ int AlumnoRepository::insert(const AlumnoModel& entity) {
         entity.getCondicionMedica(),
         entity.getMedicamento(),
         entity.getIdContacto(),
-        entity.getIdUniversidad(),
+        entity.getInstitucion(),
         entity.getIdPais(),
         entity.getEdad(),
         entity.getAceptaCodigoConductaMLH(),
@@ -212,7 +212,7 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         condicion = CASE WHEN $9 <> '' THEN $9 ELSE condicion END,
         medicamento = CASE WHEN $10 <> '' THEN $10 ELSE medicamento END,
         idcontacto = CASE WHEN $11 <> -1 THEN $11 ELSE idcontacto END,
-        iduniversidad = CASE WHEN $12 <> -1 THEN $12 ELSE iduniversidad END,
+        institucion = CASE WHEN $12 <> '' THEN $12 ELSE institucion END,
         id_pais = CASE WHEN $13 <> -1 THEN $13 ELSE id_pais END,
         edad = CASE WHEN $14 <> 0 THEN $14 ELSE edad END,
         acepta_codigo_conducta_mlh = $15,
@@ -231,7 +231,7 @@ bool AlumnoRepository::update(const AlumnoModel& entity) {
         entity.getCondicionMedica(),
         entity.getMedicamento(),
         entity.getIdContacto(),
-        entity.getIdUniversidad(),
+        entity.getInstitucion(),
         entity.getIdPais(),
         entity.getEdad(),
         entity.getAceptaCodigoConductaMLH(),

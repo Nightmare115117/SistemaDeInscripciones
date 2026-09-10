@@ -2,7 +2,7 @@
 
 using namespace std;
 
-AlumnoModel::AlumnoModel() : AlumnoModel("", 0, false, "", 0, "", "", "", "", "", 0, 0, 0,0) {}
+AlumnoModel::AlumnoModel() : AlumnoModel("", 0, false, "", "", "", "", "", "", "", 0, "", 0, 0) {}
 
 AlumnoModel::AlumnoModel(const string& nombre) :Entity(0) {
     this->nombre = nombre;
@@ -11,7 +11,7 @@ AlumnoModel::AlumnoModel(const string& nombre) :Entity(0) {
 AlumnoModel::AlumnoModel(const string& nombre, int idEquipo, bool firmo,
 const string& correo, const string& numeroTel, const string& apellidoPaterno,
 const string& apellidoMaterno, const string& alergias,
-const string& condicionMedica, const string& medicamento, int idContacto, int idUniversidad,
+const string& condicionMedica, const string& medicamento, int idContacto, const string& institucion,
 int nivelEstudio, int idPais) : Entity<int>(0) {
     this->nombre = nombre;
     this->idEquipo = idEquipo;
@@ -24,7 +24,7 @@ int nivelEstudio, int idPais) : Entity<int>(0) {
     this->condicionMedica = condicionMedica;
     this->medicamento = medicamento;
     this->idContacto = idContacto;
-    this->idUniversidad = idUniversidad;
+    this->institucion = institucion;
     this->nivelStudio = nivelEstudio;
     this->idPais = idPais;
 }
@@ -81,8 +81,8 @@ int AlumnoModel::getIdContacto() const {
     return idContacto;
 }
 
-int AlumnoModel::getIdUniversidad() const {
-    return idUniversidad;
+const string& AlumnoModel::getInstitucion() const {
+    return institucion;
 }
 
 int AlumnoModel::getNivelEstudio() const {
@@ -149,8 +149,8 @@ void AlumnoModel::setIdContacto(int id) {
     this->idContacto = id;
 }
 
-void AlumnoModel::setIdUniversidad(int idUniversidad){
-    this->idUniversidad = idUniversidad;
+void AlumnoModel::setInstitucion(const string& institucion) {
+    this->institucion = institucion;
 }
 
 void AlumnoModel::setNivelEstudio(int id) {

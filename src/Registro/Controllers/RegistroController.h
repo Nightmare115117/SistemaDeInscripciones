@@ -100,20 +100,9 @@ public:
                     alumno.setNivelEstudio(integrante.has("nivelEstudio") ? integrante["nivelEstudio"].i() : (integrante.has("nivel_estudio") ? integrante["nivel_estudio"].i() : -1));
                     alumno.setIdPais(integrante.has("paisResidencia") ? integrante["paisResidencia"].i() : -1);
                     if (integrante.has("institucion")) {
-                        const auto& institucion = integrante["institucion"];
-                        if (institucion.t() == crow::json::type::Number) {
-                            alumno.setIdUniversidad(institucion.i());
-                        } else if (institucion.t() == crow::json::type::String) {
-                            try {
-                                alumno.setIdUniversidad(std::stoi(institucion.s()));
-                            } catch (...) {
-                                alumno.setIdUniversidad(-1);
-                            }
-                        } else {
-                            alumno.setIdUniversidad(-1);
-                        }
+                        alumno.setInstitucion(integrante["institucion"].s());
                     } else {
-                        alumno.setIdUniversidad(-1);
+                        alumno.setInstitucion("");
                     }
                     alumno.setAceptaCodigoConductaMLH(integrante.has("aceptaCodigoConductaMLH") && integrante["aceptaCodigoConductaMLH"].b());
                     alumno.setAceptaCompartirDatosMLH(integrante.has("aceptaCompartirDatosMLH") && integrante["aceptaCompartirDatosMLH"].b());
