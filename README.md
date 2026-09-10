@@ -44,7 +44,6 @@ src/
 ├── Admin/                  # Administración y autenticación
 ├── Registro/               # Registros de asistencia/participación
 ├── Equipo/                 # Equipos
-├── Universidad/            # Universidades participantes
 └── Problematica/           # Problemáticas/retos del hackathon
 ```
 
@@ -419,7 +418,6 @@ src/
 ├── Admin/                  # Administration and authentication
 ├── Registro/               # Attendance/participation records
 ├── Equipo/                 # Teams
-├── Universidad/             # Participating universities
 └── Problematica/           # Hackathon challenge tracks
 ```
 
