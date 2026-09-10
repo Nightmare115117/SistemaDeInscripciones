@@ -24,10 +24,6 @@
 #include "Equipo/Services/EquipoService.h"
 #include "Equipo/Controllers/EquipoController.h"
 
-#include "Universidad/Repositories/UniversityRepository.h"
-#include "Universidad/Services/UniversityService.h"
-#include "Universidad/Controllers/UniversidadController.h"
-
 #include "Pais/Repositories/PaisRepository.h"
 #include "Pais/Services/PaisService.h"
 #include "Pais/Controllers/PaisController.h"
@@ -94,10 +90,6 @@ int main() {
     EquipoRepository equipoRepo(config);
     EquipoService equipoService(equipoRepo);
 
-    UniversityRepository universityRepo(config);
-    UniversityService universityService(universityRepo);
-    UniversidadController universidadController(universityService);
-
     PaisRepository paisRepo(config);
     PaisService paisService(paisRepo);
     PaisController paisController(paisService);
@@ -151,8 +143,6 @@ int main() {
 
     equipoController.registrarRutas(app, "/api/equipos");
     equipoController.rutasAdministrativas(app);
-
-    universidadController.registrarRutas(app, "/api/universidades");
 
     paisController.registrarRutas(app, "/api/paises");
 

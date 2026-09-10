@@ -18,7 +18,7 @@ crow::json::wvalue AlumnoController::toJson(const AlumnoModel& entidad) const {
     json["condicion"] = entidad.getCondicionMedica();
     json["medicamento"] = entidad.getMedicamento();
     json["idContacto"] = entidad.getIdContacto();
-    json["idUniversidad"] = entidad.getIdUniversidad();
+    json["institucion"] = entidad.getInstitucion();
     json["nivel_estudio"] = entidad.getNivelEstudio();
     json["idPais"] = entidad.getIdPais();
     json["edad"] = entidad.getEdad();
@@ -84,7 +84,11 @@ AlumnoModel AlumnoController::fromJson(const crow::json::rvalue& json) const {
 
     alumno.setIdContacto(json.has("idContacto") ? json["idContacto"].i() : -1);
 
-    alumno.setIdUniversidad(json.has("idUniversidad") ? json["idUniversidad"].i() : -1);
+    if (json.has("institucion")) {
+        alumno.setInstitucion(json["institucion"].s());
+    } else {
+        alumno.setInstitucion("");
+    }
     alumno.setNivelEstudio(json.has("nivel_estudio") ? json["nivel_estudio"].i() : (json.has("nivelEstudio") ? json["nivelEstudio"].i() : -1));
     alumno.setIdPais(json.has("idPais") ? json["idPais"].i() : (json.has("paisResidencia") ? json["paisResidencia"].i() : -1));
     alumno.setEdad(json.has("edad") ? json["edad"].i() : 0);

@@ -15,7 +15,7 @@ class AlumnoModel : public Entity<int> {
     std::string condicionMedica;
     std::string medicamento;
     int idContacto;
-    int idUniversidad;
+    std::string institucion;
     int nivelStudio;
     int idPais;
     int edad = 0;
@@ -34,7 +34,7 @@ public:
         const std::string& apellidoMaterno, const std::string& alergias, 
         const std::string& condicionMedica, const std::string& medicamento, 
         int idContacto,
-        int idUniversidad,
+        const std::string& institucion,
         int nivelStudio,
         int idPais
     );
@@ -50,7 +50,7 @@ public:
     const std::string& getCondicionMedica() const;
     const std::string& getMedicamento() const;
     int getIdContacto() const;
-    int getIdUniversidad() const;
+    const std::string& getInstitucion() const;
     int getNivelEstudio() const;
     int getIdPais() const;
     int getEdad() const;
@@ -70,7 +70,7 @@ public:
     void setCondicionMedica(const std::string& condicionMedica);
     void setMedicamento(const std::string& medicamento);
     void setIdContacto(int id);
-    void setIdUniversidad(int id);
+    void setInstitucion(const std::string& institucion);
     void setNivelEstudio(int id);
     void setIdPais(int id);
     void setEdad(int edad);
